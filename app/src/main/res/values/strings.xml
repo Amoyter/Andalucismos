@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Andalucismos</string>
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+    <string name="nav_header_title">Andalucismos</string>
+    <string name="nav_header_subtitle">Diccionario de palabras andaluzas</string>
+    <string name="nav_header_desc">Cabecera del menú de navegación</string>
+    <string name="action_empieza">Empieza por</string>
+    <string name="action_contiene">Contiene</string>
+
+    <string name="menu_perfil">Mi perfil</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_favoritos">Favoritos</string>
+    <string name="menu_salir">Cerrar sesión</string>
+    <string name="menu_ayuda">Ayuda</string>
+    <string name="menu_nueva">Añadir palabra</string>
+    <string name="menu_ajustes">Ajustes</string>
+    <string name="menu_feedback">Feedback</string>
+    <string name="menu_historial">Historial</string>
+
+    <string name="descripcion_logo">AndalucismosLogo</string>
+    <string name="correo_electronico">Correo electrónico *</string>
+    <string name="contrasena">Contraseña *</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="registrarse">Registrarse</string>
+
+    <!-- LoginActivity -->
+    <string name="texto_superior_login">Inicio de sesión</string>
+    <string name="texto_inferior_login">Andalucismos. Diccionario de palabras andaluzas.</string>
+
+    <!-- RegistroActivity -->
+    <string name="texto_superior_registro">Registro</string>
+    <string name="repetir_contrasena">Repetir contraseña *</string>
+    <string name="sexo_hint">Elegir sexo: *</string>
+    <string-array name="sexo">
+        <item>Hombre</item>
+        <item>Mujer</item>
+        <item>Otro</item>
+    </string-array>
+    <string name="nombre_usuario">Nombre de usuario *</string>
+    <string name="biografia">Biografía (250 caracteres máximos)</string>
+    <string name="texto_inferior_registro">Gestionando el pasaporte de andaluz…</string>
+    <string name="volver_iniciar_sesion">Volver</string>
+
+    <!-- Claves google -->
+    <string name="default_web_client_id">1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com</string>
+
+</resources>

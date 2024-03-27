@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1039494721757",
+    "firebase_url": "https://andalucismos-507bc-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "andalucismos-507bc",
+    "storage_bucket": "andalucismos-507bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039494721757:android:bffcfa18eae65cac342b34",
+        "android_client_info": {
+          "package_name": "com.amt.andalucismos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3OZdntTU4ITYenj3d0SwXnx-YAdV12Us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

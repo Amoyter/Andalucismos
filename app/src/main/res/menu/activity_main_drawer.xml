@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/ic_menu_perfil"
+            android:title="@string/menu_perfil" />
+        <item
+            android:id="@+id/nav_historial"
+            android:icon="@drawable/ic_menu_historial"
+            android:title="@string/menu_historial" />
+        <item
+            android:id="@+id/nav_favoritos"
+            android:icon="@drawable/ic_menu_favoritos"
+            android:title="@string/menu_favoritos" />
+        <item
+            android:id="@+id/nav_nueva"
+            android:icon="@drawable/ic_menu_nueva"
+            android:title="@string/menu_nueva" />
+
+    </group>
+    <item
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_ajustes"
+                android:icon="@drawable/ic_menu_ajustes"
+                android:title="@string/menu_ajustes" />
+            <item
+                android:id="@+id/nav_feedback"
+                android:icon="@drawable/ic_menu_feedback"
+                android:title="@string/menu_feedback" />
+            <item
+                android:id="@+id/nav_ayuda"
+                android:icon="@drawable/ic_menu_ayuda"
+                android:title="@string/menu_ayuda" />
+            <item
+                android:id="@+id/nav_salir"
+                android:icon="@drawable/ic_menu_salir"
+                android:title="@string/menu_salir" />
+        </menu>
+    </item>
+
+
+
+</menu>
