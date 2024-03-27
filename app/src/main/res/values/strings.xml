@@ -1,4 +1,5 @@
 <resources>
+    <!-- Generales de la aplicación -->
     <string name="app_name">Andalucismos</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
@@ -24,6 +25,8 @@
     <string name="iniciar_sesion">Iniciar sesión</string>
     <string name="registrarse">Registrarse</string>
 
+    <string name="texto_superior_formulario">Rellena todos los campos obligatorios (*)</string>
+
     <!-- LoginActivity -->
     <string name="texto_superior_login">Inicio de sesión</string>
     <string name="texto_inferior_login">Andalucismos. Diccionario de palabras andaluzas.</string>
@@ -41,6 +44,26 @@
     <string name="biografia">Biografía (250 caracteres máximos)</string>
     <string name="texto_inferior_registro">Gestionando el pasaporte de andaluz…</string>
     <string name="volver_iniciar_sesion">Volver</string>
+
+    <!-- Añadir palabra (Fragment) -->
+    <string name="palabra">Palabra *</string>
+    <string name="significado">Significado *</string>
+    <string name="ejemplo">Ejemplo de uso *</string>
+    <string name="poblacion">Población</string>
+    <string name="provincia">Provincia *</string>
+    <string name="gr">Granada</string>
+    <string name="ma">Málaga</string>
+    <string name="ca">Cádiz</string>
+    <string name="hu">Huelva</string>
+    <string name="ja">Jaén</string>
+    <string name="al">Almería</string>
+    <string name="se">Sevilla</string>
+    <string name="co">Córdoba</string>
+    <string name="varias">Varias</string>
+    <string name="comarca">Comarca</string>
+    <string name="tags">Tags</string>
+    <string name="anadir">Añadir palabra</string>
+    <string name="texto_inferior_anadir">Escribiendo en los antiguos pergaminos…</string>
 
     <!-- Claves google -->
     <string name="default_web_client_id">1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com</string>
