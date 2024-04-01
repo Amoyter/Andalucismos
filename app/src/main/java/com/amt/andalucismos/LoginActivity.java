@@ -32,7 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity implements Notificaciones {
+public class LoginActivity extends AppCompatActivity {
     private static final int REQ_ONE_TAP = 0;
 
     // Variables de la clase
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements Notificaciones {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
-    }
+    } // onStart()
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -160,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements Notificaciones {
                     }
                 });
             } catch (Exception e){
-                Notificaciones.makeDialog(this, "ERROR", e.getMessage(), "ACEPTAR", null, null, new RespuestaDialog() {
+                Notificaciones.makeDialog(this, "ERROR", e.getMessage(), "ACEPTAR", null, null, new Notificaciones.RespuestaDialog() {
                     @Override
                     public void onPositivo() {
                         Notificaciones.makeToast(getApplicationContext(), "Error al iniciar sesión", Toast.LENGTH_SHORT);
@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements Notificaciones {
                 });
             }
         }
-    }
+    } // onActivityResult()
 
     // 2- Métodos
     // 2.1- Definicion del método encargado del inicio de sesión sin Google

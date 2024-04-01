@@ -50,18 +50,20 @@
     <string name="significado">Significado *</string>
     <string name="ejemplo">Ejemplo de uso *</string>
     <string name="poblacion">Población</string>
-    <string name="provincia">Provincia *</string>
-    <string name="gr">Granada</string>
-    <string name="ma">Málaga</string>
-    <string name="ca">Cádiz</string>
-    <string name="hu">Huelva</string>
-    <string name="ja">Jaén</string>
-    <string name="al">Almería</string>
-    <string name="se">Sevilla</string>
-    <string name="co">Córdoba</string>
-    <string name="varias">Varias</string>
+    <string name="provincia">Provincias</string>
+    <string-array name="provincias">
+        <item>Varias</item>
+        <item>Granada</item>
+        <item>Málaga</item>
+        <item>Córdoba</item>
+        <item>Sevilla</item>
+        <item>Huelva</item>
+        <item>Almería</item>
+        <item>Jaén</item>
+        <item>Cádiz</item>
+    </string-array>
     <string name="comarca">Comarca</string>
-    <string name="tags">Tags</string>
+    <string name="tags">Tags (Separados por un espacio)</string>
     <string name="anadir">Añadir palabra</string>
     <string name="texto_inferior_anadir">Escribiendo en los antiguos pergaminos…</string>
 

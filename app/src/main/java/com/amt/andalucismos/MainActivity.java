@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.amt.andalucismos.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements Notificaciones{
+public class MainActivity extends AppCompatActivity{
 
     // Declaración de variables de la clase
     private AppBarConfiguration mAppBarConfiguration;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements Notificaciones{
             // 5.2- Si el elemento seleccionado es "Cerrar sesión", realizar el cierre de sesión
             if(id == R.id.nav_salir){
                 drawer.closeDrawer(GravityCompat.START); // Cierra el drawer de navegación
-                Notificaciones.makeDialog(this, null, "¿Quieres cerrar sesión?", "SI", "CANCELAR", "", new RespuestaDialog() {
+                Notificaciones.makeDialog(this, null, "¿Quieres cerrar sesión?", "SI", "CANCELAR", "", new Notificaciones.RespuestaDialog() {
                     @Override
                     public void onPositivo() {
                         fbAuth.signOut(); // Cerrar la sesión de Firebase Auth
@@ -99,20 +99,19 @@ public class MainActivity extends AppCompatActivity implements Notificaciones{
                 return NavigationUI.onNavDestinationSelected(item, navController) || super.onSupportNavigateUp();
             }
         });
-    }
+    } // onCreate()
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 6- Inflar el menú; esto agrega items a la barra de acciones si ésta está presente
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
+    } // onCreateOptionsMenu()
 
     @Override
     public boolean onSupportNavigateUp() {
         // 7- Configurar la navegación hacia arriba (up navigation) para el NavController
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+    } // onSupportNavigateUp()
 }

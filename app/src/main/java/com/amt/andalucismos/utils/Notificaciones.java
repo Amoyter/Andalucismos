@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-public interface Notificaciones {
+public class Notificaciones {
 
     /**
      * Muestra un mensaje Toast en la aplicación.
@@ -19,13 +19,13 @@ public interface Notificaciones {
      * @param sMensaje El mensaje de texto que se mostrará en el Toast.
      * @param iDuracion La duración del Toast; usa Toast.LENGTH_SHORT o Toast.LENGTH_LONG.
      */
-    static void makeToast(Context cContexto, String sMensaje, int iDuracion){
+    public static void makeToast(Context cContexto, String sMensaje, int iDuracion){
         // Se asegura de que el Toast se muestre en el hilo de la interfaz de usuario
         new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(cContexto, sMensaje, iDuracion).show());
     }
 
 
-    interface RespuestaDialog {
+    public interface RespuestaDialog {
         void onPositivo();
         void onNegativo();
         void onNeutral();
@@ -42,7 +42,7 @@ public interface Notificaciones {
      * @param sNeutral    El texto para el botón neutral. Si es nulo o vacío, el botón no se mostrará.
      * @param rdCallback    La interfaz de devolución de llamada para manejar los eventos de clic en los botones del diálogo.
      */
-    static void makeDialog(Context cContexto, String sTitulo, String sMensaje, String sPositivo, String sNegativo, String sNeutral, RespuestaDialog rdCallback){
+    public static void makeDialog(Context cContexto, String sTitulo, String sMensaje, String sPositivo, String sNegativo, String sNeutral, RespuestaDialog rdCallback){
         AlertDialog.Builder adBuilder = new AlertDialog.Builder(cContexto);
 
         if(sTitulo != null && !sTitulo.isEmpty()){

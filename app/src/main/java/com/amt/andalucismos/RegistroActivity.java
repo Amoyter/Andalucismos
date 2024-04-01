@@ -31,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistroActivity extends AppCompatActivity implements Notificaciones {
+public class RegistroActivity extends AppCompatActivity {
     // Declaración de variables de la clase para la UI y Firebase
     EditText txtNombreUsuario, txtCorreoElectronico, txtContrasena, txtRepetirContrasena, txtBiografia;
     Spinner spnrSexo;
@@ -99,7 +99,7 @@ public class RegistroActivity extends AppCompatActivity implements Notificacione
                 registrarUsuario(sCorreoElectronico, sContrasena, sNombreUsuario, sBiografia, sSexo);
             }
         });
-    }
+    } // onCreate()
 
     /**
      * Valida los datos del formulario de registro.
@@ -145,7 +145,7 @@ public class RegistroActivity extends AppCompatActivity implements Notificacione
         }
 
         return valido;
-    }
+    } // validarFormulario()
 
     /**
      * Registra un nuevo usuario en Firebase Authentication y guarda su información adicional en Firebase Realtime Database.
@@ -188,7 +188,5 @@ public class RegistroActivity extends AppCompatActivity implements Notificacione
                 Notificaciones.makeToast(this, "El registro ha fallado", Toast.LENGTH_SHORT);
             }
         });
-    }
-
-
+    } // registrarUsuario()
 }
