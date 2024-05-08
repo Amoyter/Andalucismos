@@ -2,10 +2,13 @@ package com.amt.andalucismos.ui.nueva;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,51 +120,59 @@ public class NuevaFragment extends Fragment {
     } // validarFormulario()
 
     private void anadirPalabra() {
-        if(validarFormulario()){
-            String sUsuarioId = fbUser.getUid();
-            DatabaseReference dbrExpresionId = database.child("contribuciones").push();
-            String sExpresionId = dbrExpresionId.getKey();
-            Map<String, Object> datosPalabra = new HashMap<>();
-            String sTags = new Gson().toJson(txtTags.getText().toString().toLowerCase().split("\\s"));
+        if(hayConexion()){
+            if(validarFormulario()){
+                String sUsuarioId = fbUser.getUid();
+                DatabaseReference dbrExpresionId = database.child("contribuciones").push();
+                String sExpresionId = dbrExpresionId.getKey();
+                Map<String, Object> datosPalabra = new HashMap<>();
+                String sTags = new Gson().toJson(txtTags.getText().toString().toLowerCase().split("\\s"));
 
-            datosPalabra.put("expresionId", sExpresionId);
-            datosPalabra.put("palabra", capitalizarPrimeraLetra(txtPalabra.getText().toString().trim()));
-            datosPalabra.put("significado", capitalizarPrimeraLetra(txtSignificado.getText().toString().trim()));
-            datosPalabra.put("ejemplo", capitalizarPrimeraLetra(txtEjemplo.getText().toString().trim()));
-            datosPalabra.put("poblacion", capitalizarPrimeraLetra(txtPoblacion.getText().toString().trim()));
-            datosPalabra.put("provincia", spnrProvincia.getSelectedItem().toString());
-            datosPalabra.put("comarca", capitalizarPrimeraLetra(txtComarca.getText().toString().trim()));
-            datosPalabra.put("usuarioId", sUsuarioId);
-            datosPalabra.put("revisado", false);
-            datosPalabra.put("tags", sTags);
+                datosPalabra.put("expresionId", sExpresionId);
+                datosPalabra.put("palabra", capitalizarPrimeraLetra(txtPalabra.getText().toString().trim()));
+                datosPalabra.put("significado", capitalizarPrimeraLetra(txtSignificado.getText().toString().trim()));
+                datosPalabra.put("ejemplo", capitalizarPrimeraLetra(txtEjemplo.getText().toString().trim()));
+                datosPalabra.put("poblacion", capitalizarPrimeraLetra(txtPoblacion.getText().toString().trim()));
+                datosPalabra.put("provincia", spnrProvincia.getSelectedItem().toString());
+                datosPalabra.put("comarca", capitalizarPrimeraLetra(txtComarca.getText().toString().trim()));
+                datosPalabra.put("usuarioId", sUsuarioId);
+                datosPalabra.put("revisado", false);
+                datosPalabra.put("tags", sTags);
 
-            try {
-                dbrExpresionId.setValue(datosPalabra).addOnSuccessListener(unused -> {
-                    limpiarCampos();
-                    Notificaciones.makeDialog(c, "", "¡Gracias! Tenemos que revisar tu palabra, pero no te procupes, enseguida estará disponible."
-                            , "", "", "ACEPTAR", new Notificaciones.RespuestaDialog() {
-                                @Override
-                                public void onPositivo() {}
+                try {
+                    dbrExpresionId.setValue(datosPalabra).addOnSuccessListener(unused -> {
+                        limpiarCampos();
+                        Notificaciones.makeDialog(c, "", "¡Gracias! Tenemos que revisar tu palabra, pero no te procupes, enseguida estará disponible."
+                                , "", "", "ACEPTAR", new Notificaciones.RespuestaDialog() {
+                                    @Override
+                                    public void onPositivo() {}
 
-                                @Override
-                                public void onNegativo() {}
+                                    @Override
+                                    public void onNegativo() {}
 
-                                @Override
-                                public void onNeutral() {
-                                    Notificaciones.makeToast(c, "Palabra añadida", Toast.LENGTH_SHORT);
-                                }
-                            });
-                }).addOnFailureListener(e -> {});
-            }catch (Exception e){
-                Notificaciones.makeToast(c, "Error al guardar la palabra.", Toast.LENGTH_SHORT);
+                                    @Override
+                                    public void onNeutral() {
+                                        Notificaciones.makeToast(c, "Palabra añadida", Toast.LENGTH_SHORT);
+                                    }
+                                });
+                    }).addOnFailureListener(e -> {});
+                }catch (Exception e){
+                    Log.e("anadirPalabra", "Error al guardar la palabra.", e);
+                    Notificaciones.makeToast(c, "Error al guardar la palabra. Por favor, inténtalo de nuevo.", Toast.LENGTH_SHORT);
+                }
             }
+        }else {
+            Notificaciones.makeToast(c, "No hay conexión a Internet. No se puede añadir la palabra.", Toast.LENGTH_SHORT);
         }
-
-
     } // anadirPalabra()
 
     /**
-     * Limpia los campos del formulario.
+     * Reinicia todos los campos de entrada del formulario a cadenas vacías.
+     *
+     * <br><br>Este método se utiliza para restablecer los campos de texto del formulario después de
+     * una operación exitosa (como enviar datos al servidor) o para limpiar el formulario
+     * antes de un nuevo uso. Afecta a los campos para palabra, significado, ejemplo,
+     * población, comarca y etiquetas (tags).
      */
     private void limpiarCampos() {
         txtPalabra.setText("");
@@ -172,10 +183,40 @@ public class NuevaFragment extends Fragment {
         txtTags.setText("");
     } // limpiarCampos()
 
-    public String capitalizarPrimeraLetra(String texto) {
+    /**
+     * Convierte la primera letra de una frase completa a mayúscula.
+     *
+     * <br><br>Este método es útil para formatear cadenas en situaciones donde se requiere que la primera letra
+     * de una frase esté en mayúscula, por ejemplo, al inicio de una oración o en un campo de texto que debe comenzar
+     * con mayúscula por razones de formato. Si la cadena de entrada es nula o vacía, devuelve una cadena vacía.
+     * Solo la primera letra de toda la frase se convierte a mayúscula; el resto de la frase no se modifica.
+     *
+     * @param texto La cadena de texto cuya primera letra se desea capitalizar.
+     * @return Una cadena de texto con la primera letra en mayúscula si el texto no es nulo ni vacío;
+     *         de lo contrario, devuelve una cadena vacía.
+     */
+    private String capitalizarPrimeraLetra(String texto) {
         if (texto == null || texto.isEmpty()) {
-            return texto;
+            return "";
         }
         return texto.substring(0, 1).toUpperCase() + texto.substring(1);
+    } // capitalizarPrimeraLetra()
+
+    /**
+     * Verifica si hay una conexión de red activa y disponible.
+     * <br><br>Este método comprueba si el dispositivo está conectado a una red y si esa
+     * red tiene acceso a Internet. Utiliza el {@link ConnectivityManager} para
+     * obtener detalles de la red activa y comprobar si está conectada o en proceso
+     * de conexión.
+     *
+     * @return true si hay una conexión a Internet disponible, false en caso contrario.
+     */
+    private boolean hayConexion(){
+        ConnectivityManager cm = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
     }
 }

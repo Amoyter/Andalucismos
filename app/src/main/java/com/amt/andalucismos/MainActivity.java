@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity{
                 .build();
 
         // 4- Configurar el NavController para la navegación en la aplicación
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.container_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public boolean onSupportNavigateUp() {
         // 7- Configurar la navegación hacia arriba (up navigation) para el NavController
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.container_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     } // onSupportNavigateUp()
 }

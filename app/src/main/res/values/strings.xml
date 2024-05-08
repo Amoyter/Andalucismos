@@ -9,6 +9,7 @@
     <string name="action_empieza">Empieza por</string>
     <string name="action_contiene">Contiene</string>
 
+    <!-- Menú -->
     <string name="menu_perfil">Mi perfil</string>
     <string name="menu_home">Inicio</string>
     <string name="menu_favoritos">Favoritos</string>
@@ -18,6 +19,7 @@
     <string name="menu_ajustes">Ajustes</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_historial">Historial</string>
+    <string name="menu_detalle_palabra">Detalle palabra</string>
 
     <string name="descripcion_logo">AndalucismosLogo</string>
     <string name="correo_electronico">Correo electrónico *</string>
@@ -67,7 +69,14 @@
     <string name="anadir">Añadir palabra</string>
     <string name="texto_inferior_anadir">Escribiendo en los antiguos pergaminos…</string>
 
+    <!-- Detalle palabra (Fragment) -->
+    <string name="ejemplo_detalle">Ejemplo de uso</string>
+    <string name="ubicaciones">Ubicación de la capital</string>
+    <string name="contribucion_usuario">Contribución de:</string>
+
     <!-- Claves google -->
     <string name="default_web_client_id">1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

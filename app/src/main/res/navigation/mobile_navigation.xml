@@ -38,8 +38,12 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.amt.andalucismos.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="Buscar palabra"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_detalle_palabra"
+            app:destination="@id/nav_detalle_palabra" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_nueva"
@@ -52,4 +56,16 @@
         android:name="com.amt.andalucismos.ui.perfil.PerfilFragment"
         android:label="@string/menu_perfil"
         tools:layout="@layout/fragment_perfil" />
+
+    <fragment
+        android:id="@+id/nav_detalle_palabra"
+        android:name="com.amt.andalucismos.ui.detallePalabra.DetallePalabraFragment"
+        android:label="@string/menu_detalle_palabra"
+        tools:layout="@layout/fragment_detalle_palabra" >
+        <action
+            android:id="@+id/action_nav_detalle_palabra_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+
+
 </navigation>
