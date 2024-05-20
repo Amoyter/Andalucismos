@@ -6,8 +6,10 @@
     <string name="nav_header_title">Andalucismos</string>
     <string name="nav_header_subtitle">Diccionario de palabras andaluzas</string>
     <string name="nav_header_desc">Cabecera del menú de navegación</string>
-    <string name="action_empieza">Empieza por</string>
-    <string name="action_contiene">Contiene</string>
+    <string name="action_alfabetico_asc">Orden A-Z</string>
+    <string name="action_alfabetico_desc">Orden Z-A</string>
+    <string name="action_mas_vistas">Top vistas</string>
+    <string name="action_mas_favoritos">Top favoritas</string>
 
     <!-- Menú -->
     <string name="menu_perfil">Mi perfil</string>
@@ -73,10 +75,17 @@
     <string name="ejemplo_detalle">Ejemplo de uso</string>
     <string name="ubicaciones">Ubicación de la capital</string>
     <string name="contribucion_usuario">Contribución de:</string>
+    <string name="anadida_el">Añadida el:</string>
+
+    <!-- Perfil (Fragment) -->
+    <string name="perfil_biografia">Biografía</string>
+    <string name="cambiar_contrasena">Cambiar contraseña</string>
+    <string name="eliminar_cuenta">Borrar cuenta</string>
+    <string name="guardar_cambios">Guardar cambios</string>
+
 
     <!-- Claves google -->
     <string name="default_web_client_id">1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

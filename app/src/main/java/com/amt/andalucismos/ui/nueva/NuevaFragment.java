@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,6 +137,8 @@ public class NuevaFragment extends Fragment {
                 datosPalabra.put("provincia", spnrProvincia.getSelectedItem().toString());
                 datosPalabra.put("comarca", capitalizarPrimeraLetra(txtComarca.getText().toString().trim()));
                 datosPalabra.put("usuarioId", sUsuarioId);
+                datosPalabra.put("numFavoritas", 0);
+                datosPalabra.put("fechaAnadida", new Date().getTime()+"");
                 datosPalabra.put("revisado", false);
                 datosPalabra.put("tags", sTags);
 

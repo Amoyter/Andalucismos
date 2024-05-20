@@ -2,13 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_empieza"
+        android:id="@+id/action_mas_vistas"
         android:orderInCategory="100"
-        android:title="@string/action_empieza"
+        android:title="@string/action_mas_vistas"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_contiene"
+        android:id="@+id/action_mas_favoritas"
         android:orderInCategory="100"
-        android:title="@string/action_contiene"
+        android:title="@string/action_mas_favoritos"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_alfabetico_asc"
+        android:orderInCategory="100"
+        android:title="@string/action_alfabetico_asc"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_alfabetico_desc"
+        android:orderInCategory="100"
+        android:title="@string/action_alfabetico_desc"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_busqueda"
+        android:title="Buscar"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
 </menu>

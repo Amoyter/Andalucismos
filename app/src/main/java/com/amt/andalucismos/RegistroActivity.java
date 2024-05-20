@@ -1,33 +1,20 @@
 package com.amt.andalucismos;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.amt.andalucismos.utils.Notificaciones;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,25 +27,25 @@ public class RegistroActivity extends AppCompatActivity {
     FirebaseAuth fbAuth;
     DatabaseReference database;
 
-    /*TODO:
-        RegistroActivity
-    *   -----------------------------------------------------
-    *   1- Inicializar componentes de la interfaz de usuario.
-    *   2- Configurar FirebaseAuth y DatabaseReference.
-    *   3- Establecer adaptador para el spinner de selección de sexo.
-    *   4- Implementar la lógica de navegación para el botón Volver.
-    *   5- Establecer la lógica de registro para el botón Registrarse.
-    *       5.1- Recolectar datos de entrada del usuario.
-    *       5.2- Validar los datos de entrada.
-    *       5.3- Llamar a la función de registro si la validación es exitosa.
-    */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
         // 1- Inicializar componentes de la interfaz de usuario
+        inicializarVistas();
+        // 2- Configurar FirebaseAuth y DatabaseReference
+        configurarFirebase();
+        // 3- Establecer adaptador para el spinner de selección de sexo
+        configurarSpinner();
+        // 4- Implementar la lógica de navegación para el botón Volver
+        configurarBotonVolver();
+        // 5- Establecer la lógica de registro para el botón Registrarse
+        configurarBotonRegistrarse();
+    } // onCreate()
+
+    // Método para inicializar las vistas
+    private void inicializarVistas() {
         txtNombreUsuario = findViewById(R.id.txtNombreUsuario);
         txtCorreoElectronico = findViewById(R.id.txtCorreoElectronico);
         txtContrasena = findViewById(R.id.txtContrasena);
@@ -67,23 +54,31 @@ public class RegistroActivity extends AppCompatActivity {
         spnrSexo = findViewById(R.id.spnrSexo);
         btnRegistrarse = findViewById(R.id.btnRegistrarse);
         btnVolver = findViewById(R.id.btnVolver);
+    } // inicializarVistas()
 
-        // 2- Configurar FirebaseAuth y DatabaseReference
-        fbAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance().getReference();
+    // Método para configurar Firebase
+    private void configurarFirebase() {
+        fbAuth = FirebaseAuth.getInstance(); // Instancia de FirebaseAuth
+        database = FirebaseDatabase.getInstance().getReference(); // Referencia a la base de datos
+    } // configurarFirebase()
 
-        // 3- Establecer adaptador para el spinner de selección de sexo
+    // Método para configurar el Spinner
+    private void configurarSpinner() {
         adapter = ArrayAdapter.createFromResource(this, R.array.sexo, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnrSexo.setAdapter(adapter);
+    } // configurarSpinner()
 
-        // 4- Implementar la lógica de navegación para el botón Volver
+    // Método para configurar el botón Volver
+    private void configurarBotonVolver() {
         btnVolver.setOnClickListener(view -> {
             finish();
             startActivity(new Intent(RegistroActivity.this, LoginActivity.class));
         });
+    } // configurarBotonVolver()
 
-        // 5- Establecer la lógica de registro para el botón Registrarse
+    // Método para configurar el botón Registrarse
+    private void configurarBotonRegistrarse() {
         btnRegistrarse.setOnClickListener(view -> {
             // 5.1- Recolectar datos de entrada del usuario
             String sCorreoElectronico = txtCorreoElectronico.getText().toString().trim();
@@ -99,29 +94,15 @@ public class RegistroActivity extends AppCompatActivity {
                 registrarUsuario(sCorreoElectronico, sContrasena, sNombreUsuario, sBiografia, sSexo);
             }
         });
-    } // onCreate()
+    } // configurarBotonRegistrarse()
 
-    /**
-     * Valida los datos del formulario de registro.
-     *
-     * Este método verifica que los campos del formulario de registro cumplan con los requisitos básicos:
-     * - El email debe tener un formato válido y no estar vacío.
-     * - La contraseña debe tener al menos 6 caracteres de longitud y no estar vacía.
-     * - El nombre no debe estar vacío.
-     *
-     * @param sCorreoElectronico El correo electrónico ingresado por el usuario.
-     * @param sContrasena La contraseña ingresada por el usuario.
-     * @param sRepetirContrasena La contraseña repetida ingresada por el usuario.
-     * @param sNombreUsuario El nombre ingresado por el usuario.
-     * @param sBiografia La biografía ingresada por el usuario.
-     * @return boolean Retorna true si todos los campos cumplen con los requisitos; de lo contrario, retorna false.
-     */
+    // Método para validar los campos de entrada
     private boolean validarFormulario(String sCorreoElectronico, String sContrasena, String sRepetirContrasena, String sNombreUsuario, String sBiografia) {
         boolean valido = true;
 
         // Validación del Email
         if (TextUtils.isEmpty(sCorreoElectronico) || !Patterns.EMAIL_ADDRESS.matcher(sCorreoElectronico).matches()) {
-            Notificaciones.makeToast(this, "Ingresa un correo electronico válido.", Toast.LENGTH_SHORT);
+            Notificaciones.makeToast(this, "Ingresa un correo electrónico válido.", Toast.LENGTH_SHORT);
             valido = false;
         }
         // Validación de la Contraseña
@@ -129,7 +110,7 @@ public class RegistroActivity extends AppCompatActivity {
             Notificaciones.makeToast(this, "La contraseña debe tener al menos 6 caracteres.", Toast.LENGTH_SHORT);
             valido = false;
         }
-        // Validacion de la repeticón de la contraseña
+        // Validación de la repetición de la contraseña
         else if (!sRepetirContrasena.equals(sContrasena)){
             Notificaciones.makeToast(this, "Las contraseñas no coinciden.", Toast.LENGTH_SHORT);
             valido = false;
@@ -147,20 +128,11 @@ public class RegistroActivity extends AppCompatActivity {
         return valido;
     } // validarFormulario()
 
-    /**
-     * Registra un nuevo usuario en Firebase Authentication y guarda su información adicional en Firebase Realtime Database.
-     *
-     * @param sCorreoElectronico Correo electrónico del usuario para el registro.
-     * @param sContrasena        Contraseña del usuario para el registro.
-     * @param sNombreUsuario     Nombre del usuario.
-     * @param sBiografia         Biografía del usuario.
-     * @param sSexo              Sexo del usuario.
-     */
+    // Método para registrar un nuevo usuario en Firebase Authentication y guardar su información adicional en Firebase Realtime Database
     private void registrarUsuario(final String sCorreoElectronico, String sContrasena, final String sNombreUsuario, final String sBiografia, final String sSexo) {
         // Intenta crear un usuario con email y contraseña en Firebase Auth
         fbAuth.createUserWithEmailAndPassword(sCorreoElectronico, sContrasena).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
-
                 // Registro exitoso, obtiene el ID del usuario recién creado y prepara sus datos para guardar
                 String usuarioId = fbAuth.getCurrentUser().getUid();
                 Map<String, Object> datosUsuario = new HashMap<>();
@@ -189,4 +161,4 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
     } // registrarUsuario()
-}
+} // RegistroActivity

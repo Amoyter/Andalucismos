@@ -12,6 +12,7 @@ public class Palabra {
     private String poblacion;
     private String provincia;
     private boolean revisado;
+    private String fechaAnadida;
     private String significado;
     private List<String> tags;
     private String usuarioId;
@@ -21,10 +22,11 @@ public class Palabra {
     }
 
     // Constructor completo
-    public Palabra(String comarca, String ejemplo, String expresionId, String palabra, String poblacion, String provincia, boolean revisado, String significado, List<String> tags, String usuarioId) {
+    public Palabra(String comarca, String ejemplo, String expresionId, String fechaAnadida, String palabra, String poblacion, String provincia, boolean revisado, String significado, List<String> tags, String usuarioId) {
         this.comarca = comarca;
         this.ejemplo = ejemplo;
         this.expresionId = expresionId;
+        this.fechaAnadida = fechaAnadida;
         this.palabra = palabra;
         this.poblacion = poblacion;
         this.provincia = provincia;
@@ -59,6 +61,9 @@ public class Palabra {
         this.expresionId = expresionId;
     }
 
+    public String getFechaAnadida() { return this.fechaAnadida; }
+
+    public void setFechaAnadida(String expresionId) { this.fechaAnadida = fechaAnadida; }
     public String getPalabra() {
         return palabra;
     }
