@@ -282,7 +282,6 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onError(Exception e) {
                         progressBar.setVisibility(View.GONE);
-                        // Manejar el error
                     }
                 });
     }

@@ -273,6 +273,6 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, texto.length(), 0); // Negrita
         spannableString.setSpan(new UnderlineSpan(), 0, texto.length(), 0); // Subrayado
         textView.setText(spannableString);
-    }
+    } // setTextNegritaYSubrayado()
 
-}
+} // DetallePalabraFragment

@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Andalucismos"
         tools:targetApi="34">
+        <activity
+            android:name=".ui.privacidad.PrivacidadActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

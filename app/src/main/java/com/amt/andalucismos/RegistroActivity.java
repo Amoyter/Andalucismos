@@ -2,14 +2,22 @@ package com.amt.andalucismos;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Patterns;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.amt.andalucismos.ui.privacidad.PrivacidadActivity;
 import com.amt.andalucismos.utils.Notificaciones;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -21,6 +29,8 @@ import java.util.Map;
 public class RegistroActivity extends AppCompatActivity {
     // Declaración de variables de la clase para la UI y Firebase
     EditText txtNombreUsuario, txtCorreoElectronico, txtContrasena, txtRepetirContrasena, txtBiografia;
+    TextView txtPoliticaPrivacidad;
+    CheckBox chkPoliticaPrivacidad;
     Spinner spnrSexo;
     Button btnRegistrarse, btnVolver;
     ArrayAdapter<CharSequence> adapter;
@@ -42,6 +52,8 @@ public class RegistroActivity extends AppCompatActivity {
         configurarBotonVolver();
         // 5- Establecer la lógica de registro para el botón Registrarse
         configurarBotonRegistrarse();
+        // 6- Implementar la lógica de navegación para la política de privacidad
+        configurarPoliticaPrivacidad();
     } // onCreate()
 
     // Método para inicializar las vistas
@@ -53,7 +65,10 @@ public class RegistroActivity extends AppCompatActivity {
         txtBiografia = findViewById(R.id.txtBiografia);
         spnrSexo = findViewById(R.id.spnrSexo);
         btnRegistrarse = findViewById(R.id.btnRegistrarse);
+        txtPoliticaPrivacidad = findViewById(R.id.txtPoliticaPrivacidad);
         btnVolver = findViewById(R.id.btnVolver);
+        chkPoliticaPrivacidad = findViewById(R.id.chkPoliticaPrivacidad);
+        setTextNegritaYSubrayado(txtPoliticaPrivacidad, getString(R.string.politica_privacidad_link));
     } // inicializarVistas()
 
     // Método para configurar Firebase
@@ -68,6 +83,14 @@ public class RegistroActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnrSexo.setAdapter(adapter);
     } // configurarSpinner()
+
+    private void configurarPoliticaPrivacidad() {
+        txtPoliticaPrivacidad.setOnClickListener(view -> {
+            // Abrir la nueva Activity para mostrar la política de privacidad
+            Intent intent = new Intent(RegistroActivity.this, PrivacidadActivity.class);
+            startActivity(intent);
+        });
+    }
 
     // Método para configurar el botón Volver
     private void configurarBotonVolver() {
@@ -124,6 +147,11 @@ public class RegistroActivity extends AppCompatActivity {
         else if (TextUtils.isEmpty(sBiografia)) {
             txtBiografia.setText("");
         }
+        // Validación de la política de privacidad
+        else if (!chkPoliticaPrivacidad.isChecked()) {
+            Notificaciones.makeToast(this, "Debes aceptar la política de privacidad.", Toast.LENGTH_SHORT);
+            valido = false;
+        }
 
         return valido;
     } // validarFormulario()
@@ -161,4 +189,11 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
     } // registrarUsuario()
+
+    public void setTextNegritaYSubrayado(TextView textView, String texto) {
+        SpannableString spannableString = new SpannableString(texto);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, texto.length(), 0); // Negrita
+        spannableString.setSpan(new UnderlineSpan(), 0, texto.length(), 0); // Subrayado
+        textView.setText(spannableString);
+    } // setTextNegritaYSubrayado()
 } // RegistroActivity

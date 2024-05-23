@@ -1,152 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.perfil.PerfilFragment">
+    tools:context=".RegistroActivity">
 
-    <ImageButton
-        android:id="@+id/imgBtnPerfil"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:padding="6dp"
-        android:src="@mipmap/ic_launcher"
-        android:background="@drawable/forma_redonda"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/imgBtnPerfil"
-        android:layout_alignTop="@+id/imgBtnPerfil"
-        android:layout_alignEnd="@+id/imgBtnPerfil"
-        android:layout_alignBottom="@+id/imgBtnPerfil"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="41dp"
-        android:progressTint="@color/verdeOscuro"
-        android:layout_marginEnd="41dp"
-        android:layout_marginBottom="41dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/imgBtnPerfil"
-        android:layout_alignBottom="@+id/imgBtnPerfil"
-        android:src="@drawable/ic_editar"
-        app:tint="@color/black" />
-
-    <TextView
-        android:id="@+id/txtUsuarioPerfil"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imgBtnPerfil"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="16dp"
-        android:text="Usuario Placeholder"
-        android:textAlignment="center"
-        android:textColor="@color/negro"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-    <TextView
-        android:id="@+id/txtCorreoPerfil"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtUsuarioPerfil"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="Correo electronico Placeholder"
-        android:textAlignment="center"
-        android:textColor="@color/negro"
-        android:textSize="20dp"/>
+        android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/sepCorreoBiografia"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_below="@+id/txtCorreoPerfil"
-        android:background="?android:attr/listDivider" />
+        <ImageButton
+            android:id="@+id/imgBtnPerfil"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/forma_redonda"
+            android:padding="6dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/txtBiografiaPerfil"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sepCorreoBiografia"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="32dp"
-        android:hint="@string/perfil_biografia"
-        android:inputType="textMultiLine"
-        android:minHeight="48dp"
-        android:gravity="top|start"
-        android:scrollbars="vertical"
-        android:singleLine="false"
-        android:maxLines="4" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imgBtnPerfil"
+            android:layout_alignTop="@+id/imgBtnPerfil"
+            android:layout_alignEnd="@+id/imgBtnPerfil"
+            android:layout_alignBottom="@+id/imgBtnPerfil"
+            android:progressTint="@color/verdeOscuro"
+            app:layout_constraintBottom_toBottomOf="@+id/imgBtnPerfil"
+            app:layout_constraintEnd_toEndOf="@+id/imgBtnPerfil"
+            app:layout_constraintStart_toStartOf="@+id/imgBtnPerfil"
+            app:layout_constraintTop_toTopOf="@+id/imgBtnPerfil" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/txtBiografiaPerfil"
-        android:layout_alignBottom="@+id/txtBiografiaPerfil"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="12dp"
-        android:src="@drawable/ic_editar"
-        app:tint="@color/black" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/imgBtnPerfil"
+            android:layout_alignBottom="@+id/imgBtnPerfil"
+            android:src="@drawable/ic_editar"
+            app:layout_constraintBottom_toBottomOf="@+id/imgBtnPerfil"
+            app:layout_constraintEnd_toEndOf="@+id/imgBtnPerfil"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/imgBtnPerfil"
+            app:layout_constraintTop_toTopOf="@+id/imgBtnPerfil"
+            app:layout_constraintVertical_bias="1.0"
+            app:tint="@color/black" />
 
-    <Button
-        android:id="@+id/btnGuardarCambios"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtBiografiaPerfil"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/guardar_cambios"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/txtUsuarioPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgBtnPerfil"
+            android:text="Usuario Placeholder"
+            android:textAlignment="center"
+            android:textColor="@color/negro"
+            android:layout_marginTop="16dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgBtnPerfil" />
 
-    <View
-        android:id="@+id/sepGuardarCambiosCerrarSesion"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_below="@+id/btnGuardarCambios"
-        android:background="?android:attr/listDivider" />
+        <TextView
+            android:id="@+id/txtCorreoPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtUsuarioPerfil"
+            android:text="Correo electronico Placeholder"
+            android:textAlignment="center"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/negro"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtUsuarioPerfil" />
 
-    <Button
-        android:id="@+id/btnCerrarSesion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:backgroundTint="#B22222"
-        android:layout_below="@+id/sepGuardarCambiosCerrarSesion"
-        android:text="@string/menu_salir" />
+        <View
+            android:id="@+id/sepCorreoBiografia"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/txtCorreoPerfil"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="12dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtCorreoPerfil" />
 
+        <EditText
+            android:id="@+id/txtBiografiaPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sepCorreoBiografia"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="top|start"
+            android:hint="@string/perfil_biografia"
+            android:inputType="textMultiLine"
+            android:maxLines="4"
+            android:minHeight="48dp"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sepCorreoBiografia" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/txtBiografiaPerfil"
+            android:layout_alignBottom="@+id/txtBiografiaPerfil"
+            android:src="@drawable/ic_editar"
+            app:layout_constraintBottom_toBottomOf="@+id/txtBiografiaPerfil"
+            app:layout_constraintEnd_toEndOf="@+id/txtBiografiaPerfil"
+            app:layout_constraintHorizontal_bias="0.974"
+            app:layout_constraintStart_toStartOf="@+id/txtBiografiaPerfil"
+            app:layout_constraintTop_toTopOf="@+id/txtBiografiaPerfil"
+            app:layout_constraintVertical_bias="0.333"
+            app:tint="@color/black" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnGuardarCambios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtBiografiaPerfil"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/guardar_cambios"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtBiografiaPerfil" />
+
+        <View
+            android:id="@+id/sepGuardarCambiosCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/btnGuardarCambios"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="12dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnGuardarCambios" />
+
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sepGuardarCambiosCerrarSesion"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:backgroundTint="#B22222"
+            android:text="@string/menu_salir"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sepGuardarCambiosCerrarSesion"/>
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

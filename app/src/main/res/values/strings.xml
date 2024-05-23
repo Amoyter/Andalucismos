@@ -48,6 +48,8 @@
     <string name="biografia">Biografía (250 caracteres máximos)</string>
     <string name="texto_inferior_registro">Gestionando el pasaporte de andaluz…</string>
     <string name="volver_iniciar_sesion">Volver</string>
+    <string name="politica_privacidad">He leído y acepto la</string>
+    <string name="politica_privacidad_link">Política de privacidad</string>
 
     <!-- Añadir palabra (Fragment) -->
     <string name="palabra">Palabra *</string>
@@ -82,7 +84,6 @@
     <string name="cambiar_contrasena">Cambiar contraseña</string>
     <string name="eliminar_cuenta">Borrar cuenta</string>
     <string name="guardar_cambios">Guardar cambios</string>
-
 
     <!-- Claves google -->
     <string name="default_web_client_id">1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com</string>

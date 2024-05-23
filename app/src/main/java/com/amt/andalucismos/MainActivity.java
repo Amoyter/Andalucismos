@@ -11,9 +11,11 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.amt.andalucismos.ui.detallePalabra.DetallePalabraFragment;
 import com.amt.andalucismos.ui.favoritos.FavoritosFragment;
 import com.amt.andalucismos.ui.historial.HistorialFragment;
 import com.amt.andalucismos.ui.home.HomeFragment;
+import com.amt.andalucismos.ui.perfil.PerfilFragment;
 import com.amt.andalucismos.utils.Notificaciones;
 import com.amt.andalucismos.utils.Ordenable;
 import com.google.android.material.navigation.NavigationView;
@@ -130,20 +132,20 @@ public class MainActivity extends AppCompatActivity{
             Fragment fragment = currentFragment.getChildFragmentManager().getPrimaryNavigationFragment();
 
             if (fragment instanceof Ordenable) {
-                manejarOrden(item, (Ordenable) fragment);
+                manejarOrdenOrdenable(item, (Ordenable) fragment);
+            }else if (item.getItemId() == R.id.action_politica_privacidad) {
+                NavHostFragment.findNavController(fragment).navigate(R.id.action_nav_perfil_to_privacidadFragment);
             }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void manejarOrden(@NonNull MenuItem item, Ordenable fragment) {
+    private void manejarOrdenOrdenable(@NonNull MenuItem item, Ordenable fragment) {
         int itemId = item.getItemId();
-        if (itemId == R.id.action_alfabetico_asc) {
-            fragment.ordenarAZ();
-        } else if (itemId == R.id.action_alfabetico_desc) {
-            fragment.ordenarZA();
-        }
+        if (itemId == R.id.action_alfabetico_asc) { fragment.ordenarAZ(); }
+        else if (itemId == R.id.action_alfabetico_desc) { fragment.ordenarZA(); }
+        else if (itemId == R.id.action_politica_privacidad) {  }
         // Agrega otros criterios de ordenación si es necesario
     }
 
@@ -191,18 +193,17 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
 
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
-                    Log.d("MainActivity", "SearchView closed");
-                    invalidateOptionsMenu(); // Esto forzará la recreación del menú
-                    return false;
-                }
+            searchView.setOnCloseListener(() -> {
+                Log.d("MainActivity", "SearchView closed");
+                invalidateOptionsMenu(); // Esto forzará la recreación del menú
+                return false;
             });
 
             return true;
+        } else if (currentDestination != null && currentDestination.getId() == R.id.nav_perfil) {
+            getMenuInflater().inflate(R.menu.perfil, menu);
+            return true;
         }
-
         return false;
     }
 

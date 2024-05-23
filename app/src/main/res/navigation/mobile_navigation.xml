@@ -55,7 +55,11 @@
         android:id="@+id/nav_perfil"
         android:name="com.amt.andalucismos.ui.perfil.PerfilFragment"
         android:label="@string/menu_perfil"
-        tools:layout="@layout/fragment_perfil" />
+        tools:layout="@layout/fragment_perfil" >
+        <action
+            android:id="@+id/action_nav_perfil_to_privacidadFragment"
+            app:destination="@id/nav_privacidad" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_detalle_palabra"
@@ -65,6 +69,15 @@
         <action
             android:id="@+id/action_nav_detalle_palabra_to_nav_home"
             app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_privacidad"
+        android:name="com.amt.andalucismos.ui.privacidad.PrivacidadFragment"
+        android:label="Política de privacidad"
+        tools:layout="@layout/fragment_privacidad" >
+        <action
+            android:id="@+id/action_privacidadFragment_to_nav_perfil"
+            app:destination="@id/nav_perfil" />
     </fragment>
 
 
