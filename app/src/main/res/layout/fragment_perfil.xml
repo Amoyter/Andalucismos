@@ -22,6 +22,24 @@
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imgBtnPerfil"
+        android:layout_alignTop="@+id/imgBtnPerfil"
+        android:layout_alignEnd="@+id/imgBtnPerfil"
+        android:layout_alignBottom="@+id/imgBtnPerfil"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="41dp"
+        android:progressTint="@color/verdeOscuro"
+        android:layout_marginEnd="41dp"
+        android:layout_marginBottom="41dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,34 +134,19 @@
         android:layout_below="@+id/btnGuardarCambios"
         android:background="?android:attr/listDivider" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btnCerrarSesion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#B22222"
         android:layout_below="@+id/sepGuardarCambiosCerrarSesion"
-        android:orientation="horizontal"
-        android:paddingTop="12dp"
-        android:gravity="center">
+        android:text="@string/menu_salir" />
 
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="32dp"
-            android:text="@string/menu_salir" />
-
-        <Button
-            android:id="@+id/btnEliminarCuenta"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="#B22222"
-            android:text="@string/eliminar_cuenta" />
-
-    </LinearLayout>
 
 
 </RelativeLayout>

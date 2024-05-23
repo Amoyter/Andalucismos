@@ -71,7 +71,16 @@ dependencies {
 
     // Librería del mapa de Google
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
-    implementation 'com.google.android.gms:play-services-maps:x.y.z'
     implementation 'com.google.maps.android:android-maps-utils:2.2.5'
+
+    // Firebase Storage
+    implementation("androidx.lifecycle:lifecycle-common:2.8.0")
+    implementation 'com.google.firebase:firebase-storage:21.0.0'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
+
+    // ExifInterface
+    implementation 'androidx.exifinterface:exifinterface:1.3.7'
 
 }

@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity{
     } // configurarBarraNavegacion()
 
     // Método para manejar el cierre de sesión
-    private void manejarCerrarSesion() {
+    public void manejarCerrarSesion() {
         drawer.closeDrawer(GravityCompat.START); // Cierra el drawer de navegación
         Notificaciones.makeDialog(this, null, "¿Quieres cerrar sesión?", "SI", "CANCELAR", "", new Notificaciones.RespuestaDialog() {
             @Override
