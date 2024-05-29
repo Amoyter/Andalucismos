@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amt.andalucismos.R;
 import com.amt.andalucismos.models.Palabra;
+import com.amt.andalucismos.models.Usuario;
+import com.amt.andalucismos.utils.MainViewModel;
 import com.amt.andalucismos.utils.OnPalabrasClickListener;
 
 import java.util.ArrayList;
@@ -22,16 +24,18 @@ import java.util.List;
 
 public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHolder> implements Filterable {
     private final OnPalabrasClickListener onPalabrasClickListener;
-    private int iResource = R.layout.item_palabra;
-    private ArrayList<Palabra> alPalabras;
-    public ArrayList<Palabra> alPalabrasFull;
+    private final int iResource = R.layout.item_palabra;
+    private List<Palabra> alPalabras;
+    private List<Palabra> alPalabrasFull;
     private Context c;
+    private MainViewModel mainViewModel;
 
-    public PalabraAdapter(Context c, ArrayList<Palabra> alPalabras, OnPalabrasClickListener onPalabrasClickListener) {
+    public PalabraAdapter(Context c, List<Palabra> alPalabras, OnPalabrasClickListener onPalabrasClickListener, MainViewModel mainViewModel) {
         this.onPalabrasClickListener = onPalabrasClickListener;
         this.c = c;
         this.alPalabras = alPalabras;
         this.alPalabrasFull = new ArrayList<>(alPalabras);
+        this.mainViewModel = mainViewModel;
     }
 
     @NonNull
@@ -46,6 +50,23 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
         Palabra palabra = alPalabras.get(position);
         holder.txtPalabra.setText(palabra.getPalabra());
         holder.txtSignificado.setText(palabra.getSignificado());
+
+        Usuario usuario = mainViewModel.getUsuario().getValue();
+        if (usuario != null && usuario.getFavoritas() != null && usuario.getFavoritas().contains(palabra.getExpresionId())) {
+            holder.imgBtnFavoritos.setImageResource(R.drawable.ic_favoritos_relleno);
+        } else {
+            holder.imgBtnFavoritos.setImageResource(R.drawable.ic_favoritos_vacio);
+        }
+
+        holder.imgBtnFavoritos.setOnClickListener(v -> {
+            if (usuario != null) {
+                boolean isFavorito = usuario.getFavoritas() != null && usuario.getFavoritas().contains(palabra.getExpresionId());
+                mainViewModel.actualizarFavorito(palabra, !isFavorito);
+                notifyItemChanged(position);
+            } else {
+                Log.e("PalabraAdapter", "Usuario es null");
+            }
+        });
     }
 
     @Override
@@ -54,14 +75,11 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
     }
 
     @Override
-    public Filter getFilter() {
-        return palabraFilter;
-    }
+    public Filter getFilter() { return palabraFilter; }
 
     private Filter palabraFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            Log.d("PalabraAdapter", "performFiltering called with constraint: " + constraint);
             List<Palabra> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(alPalabrasFull);
@@ -71,10 +89,8 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
                     if (palabra.getPalabra().toLowerCase().contains(filterPattern)) {
                         filteredList.add(palabra);
                     }
-                    Log.d("PalabraAdapter", "Checking palabra: " + palabra.getPalabra() + " against pattern: " + filterPattern);
                 }
             }
-            Log.d("PalabraAdapter", "performFiltering result size: " + filteredList.size());
             FilterResults results = new FilterResults();
             results.values = filteredList;
             return results;
@@ -82,12 +98,17 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            Log.d("PalabraAdapter", "publishResults called");
             alPalabras.clear();
             alPalabras.addAll((List<Palabra>) results.values);
             notifyDataSetChanged();
         }
     };
+
+    public void setPalabras(List<Palabra> palabras) {
+        this.alPalabras = palabras;
+        this.alPalabrasFull = new ArrayList<>(palabras);
+        notifyDataSetChanged();
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtPalabra, txtSignificado;
@@ -112,3 +133,4 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
         }
     }
 }
+

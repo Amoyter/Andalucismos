@@ -21,7 +21,11 @@
         android:id="@+id/nav_favoritos"
         android:name="com.amt.andalucismos.ui.favoritos.FavoritosFragment"
         android:label="@string/menu_favoritos"
-        tools:layout="@layout/fragment_favoritos" />
+        tools:layout="@layout/fragment_favoritos" >
+        <action
+            android:id="@+id/action_nav_favoritos_to_nav_detalle_palabra"
+            app:destination="@id/nav_detalle_palabra" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_feedback"
@@ -33,7 +37,11 @@
         android:id="@+id/nav_historial"
         android:name="com.amt.andalucismos.ui.historial.HistorialFragment"
         android:label="@string/menu_historial"
-        tools:layout="@layout/fragment_historial" />
+        tools:layout="@layout/fragment_historial" >
+        <action
+            android:id="@+id/action_nav_historial_to_nav_detalle_palabra"
+            app:destination="@id/nav_detalle_palabra" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_home"
@@ -69,6 +77,15 @@
         <action
             android:id="@+id/action_nav_detalle_palabra_to_nav_home"
             app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_detalle_palabra_to_nav_favoritos"
+            app:destination="@id/nav_favoritos" />
+        <action
+            android:id="@+id/action_nav_detalle_palabra_to_nav_historial"
+            app:destination="@id/nav_historial" />
+        <action
+            android:id="@+id/action_nav_detalle_palabra_to_nav_propias"
+            app:destination="@id/nav_propias" />
     </fragment>
     <fragment
         android:id="@+id/nav_privacidad"
@@ -78,6 +95,15 @@
         <action
             android:id="@+id/action_privacidadFragment_to_nav_perfil"
             app:destination="@id/nav_perfil" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_propias"
+        android:name="com.amt.andalucismos.ui.propias.PropiasFragment"
+        android:label="Mis aportaciones"
+        tools:layout="@layout/fragment_propias" >
+        <action
+            android:id="@+id/action_nav_propias_to_nav_detalle_palabra"
+            app:destination="@id/nav_detalle_palabra" />
     </fragment>
 
 

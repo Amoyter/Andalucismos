@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_perfil"
             android:title="@string/menu_perfil" />
         <item
+            android:id="@+id/nav_propias"
+            android:icon="@drawable/ic_menu_propias"
+            android:title="@string/menu_propias" />
+        <item
             android:id="@+id/nav_historial"
             android:icon="@drawable/ic_menu_historial"
             android:title="@string/menu_historial" />
@@ -26,8 +30,8 @@
             android:title="@string/menu_nueva" />
 
     </group>
-    <item
-        android:title="">
+
+    <item android:title="">
         <menu>
             <item
                 android:id="@+id/nav_ajustes"
@@ -47,7 +51,5 @@
                 android:title="@string/menu_salir" />
         </menu>
     </item>
-
-
 
 </menu>

@@ -1,5 +1,4 @@
-package com.amt.andalucismos.ui.home;
-
+package com.amt.andalucismos.ui.propias;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -30,14 +29,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements OnPalabrasClickListener, Ordenable {
+public class PropiasFragment extends Fragment implements OnPalabrasClickListener, Ordenable {
     private Context c;
     private View v;
     private Gson gson;
     private Type listType;
-    private RecyclerView rvPalabras;
+    private RecyclerView rvPropias;
     private PalabraAdapter adapter;
-    private ArrayList<Palabra> alPalabras;
+    private ArrayList<Palabra> alPropias;
     private MainViewModel mainViewModel;
 
     @Override
@@ -49,20 +48,19 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_home, container, false);
+        v = inflater.inflate(R.layout.fragment_propias, container, false);
 
         inicializarVariables();
 
         mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
-            alPalabras.clear();
-            alPalabras.addAll(palabras);
-            adapter.notifyDataSetChanged();
-        });
-
-        mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
-            if (usuario != null) {
-                adapter.notifyDataSetChanged();
+            alPropias.clear();
+            String userId = mainViewModel.getUserId().getValue();
+            for (Palabra palabra : palabras) {
+                if (palabra.getUsuarioId().equals(userId)) {
+                    alPropias.add(palabra);
+                }
             }
+            adapter.notifyDataSetChanged();
         });
 
         return v;
@@ -70,48 +68,44 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
 
     private void inicializarVariables() {
         c = getContext();
-        rvPalabras = v.findViewById(R.id.rvPalabras);
+        rvPropias = v.findViewById(R.id.rvPropias);
         gson = new Gson();
-        alPalabras = new ArrayList<>();
+        alPropias = new ArrayList<>();
         listType = new TypeToken<List<String>>() {}.getType();
 
-        rvPalabras.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new PalabraAdapter(c, alPalabras, this, mainViewModel);
-        rvPalabras.setAdapter(adapter);
-    }
-
-    public void filtrarPalabras(String query) {
-        adapter.getFilter().filter(query);
+        rvPropias.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new PalabraAdapter(c, alPropias, this, mainViewModel);
+        rvPropias.setAdapter(adapter);
     }
 
     @Override
     public void onPalabraClick(int position) {
-        Palabra palabra = alPalabras.get(position);
+        Palabra palabra = alPropias.get(position);
         DetallePalabraFragment detallePalabraFragment = new DetallePalabraFragment();
 
         Bundle args = new Bundle();
         args.putParcelable("palabra", palabra);
 
         detallePalabraFragment.setArguments(args);
-        NavHostFragment.findNavController(this).navigate(R.id.action_nav_home_to_nav_detalle_palabra, args);
+        NavHostFragment.findNavController(this).navigate(R.id.action_nav_propias_to_nav_detalle_palabra, args);
     }
 
     @Override
     public void ordenarAZ() {
-        Collections.sort(alPalabras, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
+        Collections.sort(alPropias, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void ordenarZA() {
-        Collections.sort(alPalabras, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
+        Collections.sort(alPropias, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void ordenarFavoritas() {
-        Collections.sort(alPalabras, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
+        Collections.sort(alPropias, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
         adapter.notifyDataSetChanged();
     }
-}
 
+}

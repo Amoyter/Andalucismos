@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,16 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amt.andalucismos.MainActivity;
 import com.amt.andalucismos.R;
 import com.amt.andalucismos.adapters.TagAdapter;
+import com.amt.andalucismos.models.Palabra;
+import com.amt.andalucismos.utils.MainViewModel;
 import com.amt.andalucismos.utils.Notificaciones;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,37 +33,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class DetallePalabraFragment extends Fragment implements OnMapReadyCallback {
     private View v;
     private Context c;
-    private MainActivity mainActivity;
-    private TextView txtPalabra, txtSignificado, txtEjemplo, txtUbicacion, txtUsarioAporte, txtFechaAnadida;
+    private MainViewModel mainViewModel;
+    private TextView txtPalabra, txtSignificado, txtEjemplo, txtUbicacion, txtUsuarioAporte, txtFechaAnadida;
     private RecyclerView rvTags;
+    private ImageView imgFavoritos;
     private TagAdapter adapter;
-    private double dLongitud = 0.0f;
-    private double dLatitud = 0.0f;
-    private String sPalabra = "";
-    private String sSignificado = "";
-    private String sComarca = "";
-    private String sEjemplo = "";
-    private String sExpresionId = "";
-    private String sFechaAnadida = "";
-    private String sPoblacion = "";
-    private String sProvincia = "";
-    private String sUsuarioId = "";
-    private String sNombreUsuario = "Sin datos";
-    private List<String> lTags;
+    private double dLongitud = 0.0;
+    private double dLatitud = 0.0;
+    private Palabra palabra;
+    private boolean esFavorita;
 
     public DetallePalabraFragment() {
         // Constructor vacío requerido
@@ -70,10 +57,8 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity) {
-            mainActivity = (MainActivity) context;
-        }
-    } // onAttach()
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +67,8 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         Bundle args = getArguments();
 
         if (args != null) {
-            obtenerArgumentos(args);
+            palabra = args.getParcelable("palabra");
+            obtenerCoordenadas(palabra.getProvincia());
             inicializarRecyclerView();
         } else {
             Notificaciones.makeToast(getContext(), "Error al acceder a los datos de la palabra", Toast.LENGTH_SHORT);
@@ -90,9 +76,19 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
             return v;
         }
 
-        obtenerCoordenadas(sProvincia);
         inicializarVistas();
-        obtenerNombreUsuario();
+        mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario != null) {
+                setTextNegritaYSubrayado(txtUsuarioAporte, usuario.getNombre());
+                esFavorita = usuario.getFavoritas().contains(palabra.getExpresionId());
+                actualizarIconoFavorito(esFavorita);
+            }
+        });
+
+        imgFavoritos.setOnClickListener(view -> {
+            esFavorita = !esFavorita;
+            actualizarFavorito(palabra, esFavorita);
+        });
 
         return v;
     }
@@ -105,7 +101,7 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
             mapFragment = SupportMapFragment.newInstance();
             getChildFragmentManager().beginTransaction().replace(R.id.map_container, mapFragment).commit();
         }
-        mapFragment.getMapAsync((OnMapReadyCallback) this);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -115,61 +111,53 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
         googleMap.getUiSettings().setRotateGesturesEnabled(true);
-        if (dLongitud != 0.0f && dLatitud != 0.0f) {
-            googleMap.addMarker(new MarkerOptions().position(coords).title(sProvincia));
+        if (dLongitud != 0.0 && dLatitud != 0.0) {
+            googleMap.addMarker(new MarkerOptions().position(coords).title(palabra.getProvincia()));
         }
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
     }
 
-    // Método para inicializar las vistas
     private void inicializarVistas() {
         txtPalabra = v.findViewById(R.id.txtDpPalabra);
         txtSignificado = v.findViewById(R.id.txtDpSignificado);
         txtEjemplo = v.findViewById(R.id.txtDpEjemplo);
         txtUbicacion = v.findViewById(R.id.txtDpUbicacion);
-        txtUsarioAporte = v.findViewById(R.id.txtDpUsarioAporte);
+        txtUsuarioAporte = v.findViewById(R.id.txtDpUsarioAporte);
         txtFechaAnadida = v.findViewById(R.id.txtDpFechaAnadida);
+        imgFavoritos = v.findViewById(R.id.imgDpBtnFavoritos);
 
-        txtPalabra.setText(sPalabra);
-        txtSignificado.setText(sSignificado);
-        txtEjemplo.setText(sEjemplo);
-        txtUbicacion.setText(obtenerUbicacion(sProvincia, sPoblacion, sComarca));
-        txtFechaAnadida.setText(sFechaAnadida);
+        txtPalabra.setText(palabra.getPalabra());
+        txtSignificado.setText(palabra.getSignificado());
+        txtEjemplo.setText(palabra.getEjemplo());
+        txtUbicacion.setText(obtenerUbicacion(palabra.getProvincia(), palabra.getPoblacion(), palabra.getComarca()));
+        txtFechaAnadida.setText(convertirFecha(palabra.getFechaAnadida()));
     }
 
-    // Método para obtener los argumentos pasados al fragmento
-    private void obtenerArgumentos(Bundle args) {
-        sPalabra = args.getString("palabra");
-        sSignificado = args.getString("significado");
-        sComarca = args.getString("comarca");
-        sEjemplo = args.getString("ejemplo");
-        sExpresionId = args.getString("expresionId");
-        sFechaAnadida = args.getString("fechaAnadida");
-        if(sFechaAnadida == null || sFechaAnadida.isEmpty()){ sFechaAnadida = "Sin datos"; }
-        else { sFechaAnadida = convertirFecha(sFechaAnadida); }
-        sPoblacion = args.getString("poblacion");
-        sProvincia = args.getString("provincia");
-        sUsuarioId = args.getString("usuarioId");
-
-        String jsonTags = args.getString("tags");
-        Type type = new TypeToken<List<String>>() {}.getType();
-        lTags = new Gson().fromJson(jsonTags, type);
+    private void actualizarIconoFavorito(boolean esFavorita) {
+        if (esFavorita) {
+            imgFavoritos.setImageResource(R.drawable.ic_favoritos_relleno);
+        } else {
+            imgFavoritos.setImageResource(R.drawable.ic_favoritos_vacio);
+        }
     }
 
-    // Método para inicializar el RecyclerView
+    private void actualizarFavorito(Palabra palabra, boolean esFavorita) {
+        mainViewModel.actualizarFavorito(palabra, esFavorita);
+        actualizarIconoFavorito(esFavorita);
+    }
+
     private void inicializarRecyclerView() {
-        if (lTags != null && !lTags.get(0).isEmpty() && getActivity() != null) {
+        if (palabra.getLTags() != null && !palabra.getLTags().isEmpty() && getActivity() != null) {
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(RecyclerView.HORIZONTAL);
             rvTags = v.findViewById(R.id.rvTags);
             rvTags.setLayoutManager(llm);
-            adapter = new TagAdapter(c, lTags);
+            adapter = new TagAdapter(c, palabra.getLTags());
             rvTags.setAdapter(adapter);
-            getActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
         }
     }
 
-    private void obtenerCoordenadas(String sProvincia){
+    private void obtenerCoordenadas(String sProvincia) {
         switch (sProvincia) {
             case "Granada":
                 dLatitud = 37.18817;
@@ -208,9 +196,8 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
                 dLongitud = 0.0;
                 break;
         }
-    } // obtenerUbicacion()
+    }
 
-    // Método para obtener la ubicación en formato cadena
     private String obtenerUbicacion(String sProvincia, String sPoblacion, String sComarca) {
         StringBuilder sUbicacion = new StringBuilder();
         if (sProvincia != null && !sProvincia.equals("Varias")) {
@@ -231,48 +218,22 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         return sUbicacion.toString();
     }
 
-    private void obtenerNombreUsuario() {
-        if (mainActivity.hayConexion()) {
-            mainActivity.obtenerDatos("usuarios/" + sUsuarioId + "/nombre", new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        Log.d("UsuarioId", sUsuarioId);
-                        Log.d("Recibido", snapshot.getValue(String.class));
-                        sNombreUsuario = snapshot.getValue(String.class);
-                        setTextNegritaYSubrayado(txtUsarioAporte, sNombreUsuario);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("obtenerNombreUsuario", "DatabaseError", error.toException());
-                }
-            });
-        } else {
-            Notificaciones.makeToast(c, "No hay conexión a Internet.", Toast.LENGTH_SHORT);
-        }
-    }
-
     public static String convertirFecha(String sFechaAnadida) {
-        // Convertir el string a un long
-        long fechaMilisegundos = Long.parseLong(sFechaAnadida);
-
-        // Crear un objeto Date a partir del long
-        Date fecha = new Date(fechaMilisegundos);
-
-        // Crear un formateador de fecha
-        SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
-
-        // Formatear la fecha y devolver el resultado
-        return formateador.format(fecha);
+        String sFechaParseada = "Sin fecha de creación";
+        if (sFechaAnadida != null && !sFechaAnadida.isEmpty()) {
+            long fechaMilisegundos = Long.parseLong(sFechaAnadida);
+            Date fecha = new Date(fechaMilisegundos);
+            SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+            sFechaParseada = formateador.format(fecha);
+        }
+        return sFechaParseada;
     }
 
     public void setTextNegritaYSubrayado(TextView textView, String texto) {
         SpannableString spannableString = new SpannableString(texto);
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, texto.length(), 0); // Negrita
-        spannableString.setSpan(new UnderlineSpan(), 0, texto.length(), 0); // Subrayado
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, texto.length(), 0);
+        spannableString.setSpan(new UnderlineSpan(), 0, texto.length(), 0);
         textView.setText(spannableString);
-    } // setTextNegritaYSubrayado()
+    }
+}
 
-} // DetallePalabraFragment
