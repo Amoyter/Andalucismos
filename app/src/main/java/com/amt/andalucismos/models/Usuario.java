@@ -6,6 +6,7 @@ public class Usuario {
     private String bio;
     private String email;
     private List<String> favoritas;
+    private List<String> historial;
     private String id;
     private String nombre;
     private String sexo;
@@ -15,10 +16,11 @@ public class Usuario {
     }
 
     // Constructor completo
-    public Usuario(String bio, String email, List<String> favoritas, String id, String nombre, String sexo) {
+    public Usuario(String bio, String email, List<String> favoritas, List<String> historial, String id, String nombre, String sexo) {
         this.bio = bio;
         this.email = email;
         this.favoritas = favoritas;
+        this.historial = historial;
         this.id = id;
         this.nombre = nombre;
         this.sexo = sexo;
@@ -47,6 +49,12 @@ public class Usuario {
 
     public void setFavoritas(List<String> favoritas) {
         this.favoritas = favoritas;
+    }
+
+    public List<String> getHistorial() { return historial; }
+
+    public void setHistorial(List<String> historial) {
+        this.historial = historial;
     }
 
     public String getId() {

@@ -5,10 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.historial.HistorialFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHistorial"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/menu_historial" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="12dp" />
 
 </RelativeLayout>

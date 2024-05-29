@@ -60,6 +60,10 @@ public class MainViewModel extends ViewModel {
                         user.setFavoritas(new ArrayList<>());
                         userRef.child("favoritas").setValue(user.getFavoritas()); // Inicializar la lista de favoritas en la base de datos
                     }
+                    if (user.getHistorial() == null) {
+                        user.setHistorial(new ArrayList<>());
+                        userRef.child("historial").setValue(user.getFavoritas()); // Inicializar la lista de historial en la base de datos
+                    }
                     usuario.setValue(user);
                 }
             }
@@ -152,6 +156,42 @@ public class MainViewModel extends ViewModel {
                     });
                 } else {
                     Log.e("MainViewModel", "Error al actualizar palabra: " + databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void actualizarHistorial(Palabra palabra) {
+        String userId = usuario.getValue().getId();
+        DatabaseReference usuarioRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId).child("historial");
+
+        usuarioRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                List<String> historial = mutableData.getValue(new GenericTypeIndicator<List<String>>() {});
+                if (historial == null) {
+                    historial = new ArrayList<>();
+                }
+
+                if (historial.contains(palabra.getExpresionId())) {
+                    historial.remove(palabra.getExpresionId());
+                }
+
+                if (historial.size() >= 50) {
+                    historial.remove(0);
+                }
+
+                historial.add(palabra.getExpresionId());
+
+                mutableData.setValue(historial);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    Log.e("MainViewModel", "Error al actualizar historial: " + databaseError.getMessage());
                 }
             }
         });

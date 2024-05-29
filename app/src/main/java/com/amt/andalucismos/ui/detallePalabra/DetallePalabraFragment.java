@@ -90,6 +90,8 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
             actualizarFavorito(palabra, esFavorita);
         });
 
+        mainViewModel.actualizarHistorial(palabra);
+
         return v;
     }
 
