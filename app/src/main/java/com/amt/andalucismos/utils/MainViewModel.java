@@ -21,12 +21,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class MainViewModel extends ViewModel {
     private final MutableLiveData<List<Palabra>> palabras = new MutableLiveData<>();
     private final MutableLiveData<String> userId = new MutableLiveData<>();
     private final MutableLiveData<Usuario> usuario = new MutableLiveData<>();
+    private final MutableLiveData<Palabra> palabraDelDia = new MutableLiveData<>();
 
     public LiveData<List<Palabra>> getPalabras() {
         return palabras;
@@ -40,10 +42,31 @@ public class MainViewModel extends ViewModel {
         return usuario;
     }
 
+    public LiveData<Palabra> getPalabraDelDia() { return palabraDelDia; }
+
+    public LiveData<Palabra> getPalabraById(String palabraId) {
+        MutableLiveData<Palabra> palabraLiveData = new MutableLiveData<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("contribuciones").child(palabraId);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Palabra palabra = snapshot.getValue(Palabra.class);
+                palabraLiveData.setValue(palabra);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error al obtener la palabra por ID", error.toException());
+            }
+        });
+        return palabraLiveData;
+    }
+
     public void setUserId(String id) {
         userId.setValue(id);
         loadUsuario(id);
     }
+
 
     public void setPalabras(List<Palabra> listaPalabras) {
         palabras.setValue(listaPalabras);
@@ -196,5 +219,30 @@ public class MainViewModel extends ViewModel {
             }
         });
     }
+
+    public void loadPalabraDelDia() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("contribuciones");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Palabra> palabras = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Palabra palabra = snapshot.getValue(Palabra.class);
+                    palabras.add(palabra);
+                }
+                if (!palabras.isEmpty()) {
+                    int randomIndex = new Random().nextInt(palabras.size());
+                    Palabra palabraDelDia = palabras.get(randomIndex);
+                    MainViewModel.this.palabraDelDia.setValue(palabraDelDia);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("MainViewModel", "Error al seleccionar la palabra del día aleatoriamente", databaseError.toException());
+            }
+        });
+    }
+
 }
 

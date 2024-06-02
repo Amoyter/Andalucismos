@@ -54,6 +54,17 @@ public class LoginActivity extends AppCompatActivity {
         configurarGoogleSignIn();
         // Configurar listeners
         configurarListeners();
+
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser() != null) {
+                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                if (getIntent().hasExtra("expresionId")) {
+                    mainIntent.putExtra("expresionId", getIntent().getStringExtra("expresionId"));
+                }
+                startActivity(mainIntent);
+                finish();
+            }
+        });
     } // onCreate()
 
     // Método para inicializar las vistas

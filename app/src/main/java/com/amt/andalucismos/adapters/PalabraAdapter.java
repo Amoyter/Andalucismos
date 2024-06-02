@@ -22,6 +22,10 @@ import com.amt.andalucismos.utils.OnPalabrasClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter para manejar la visualización de palabras en un RecyclerView.
+ * Implementa la interfaz Filterable para permitir la filtración de palabras.
+ */
 public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHolder> implements Filterable {
     private final OnPalabrasClickListener onPalabrasClickListener;
     private final int iResource = R.layout.item_palabra;
@@ -30,6 +34,14 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
     private Context c;
     private MainViewModel mainViewModel;
 
+    /**
+     * Constructor para inicializar el adaptador.
+     *
+     * @param c                     Contexto de la aplicación.
+     * @param alPalabras            Lista de palabras a mostrar.
+     * @param onPalabrasClickListener Listener para manejar los clics en las palabras.
+     * @param mainViewModel         ViewModel principal para manejar la lógica de la aplicación.
+     */
     public PalabraAdapter(Context c, List<Palabra> alPalabras, OnPalabrasClickListener onPalabrasClickListener, MainViewModel mainViewModel) {
         this.onPalabrasClickListener = onPalabrasClickListener;
         this.c = c;
@@ -51,18 +63,21 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
         holder.txtPalabra.setText(palabra.getPalabra());
         holder.txtSignificado.setText(palabra.getSignificado());
 
+        // Obtener el usuario actual desde el ViewModel
         Usuario usuario = mainViewModel.getUsuario().getValue();
+        // Verificar si la palabra es favorita y establecer el icono correspondiente
         if (usuario != null && usuario.getFavoritas() != null && usuario.getFavoritas().contains(palabra.getExpresionId())) {
             holder.imgBtnFavoritos.setImageResource(R.drawable.ic_favoritos_relleno);
         } else {
             holder.imgBtnFavoritos.setImageResource(R.drawable.ic_favoritos_vacio);
         }
 
+        // Manejar clics en el botón de favoritos
         holder.imgBtnFavoritos.setOnClickListener(v -> {
             if (usuario != null) {
                 boolean isFavorito = usuario.getFavoritas() != null && usuario.getFavoritas().contains(palabra.getExpresionId());
                 mainViewModel.actualizarFavorito(palabra, !isFavorito);
-                notifyItemChanged(position);
+                notifyItemChanged(position);// Notificar al adaptador que el elemento ha cambiado
             } else {
                 Log.e("PalabraAdapter", "Usuario es null");
             }
@@ -77,6 +92,9 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
     @Override
     public Filter getFilter() { return palabraFilter; }
 
+    /**
+     * Filtro para la búsqueda de palabras en la lista.
+     */
     private Filter palabraFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -100,21 +118,35 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
         protected void publishResults(CharSequence constraint, FilterResults results) {
             alPalabras.clear();
             alPalabras.addAll((List<Palabra>) results.values);
-            notifyDataSetChanged();
+            notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
         }
     };
 
+    /**
+     * Actualiza la lista de palabras en el adaptador.
+     *
+     * @param palabras Nueva lista de palabras.
+     */
     public void setPalabras(List<Palabra> palabras) {
         this.alPalabras = palabras;
         this.alPalabrasFull = new ArrayList<>(palabras);
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder para mantener las vistas de cada elemento en el RecyclerView.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtPalabra, txtSignificado;
         private ImageButton imgBtnFavoritos;
         public View v;
 
+        /**
+         * Constructor para inicializar el ViewHolder.
+         *
+         * @param itemView Vista del elemento.
+         * @param onPalabrasClickListener Listener para manejar los clics en las palabras.
+         */
         public ViewHolder(@NonNull View itemView, OnPalabrasClickListener onPalabrasClickListener) {
             super(itemView);
             this.v = itemView;
@@ -122,6 +154,7 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
             this.txtSignificado = itemView.findViewById(R.id.txtSignificadoRv);
             this.imgBtnFavoritos = itemView.findViewById(R.id.imgBtnFavoritos);
 
+            // Manejar clics en el elemento del RecyclerView
             itemView.setOnClickListener(view -> {
                 if (onPalabrasClickListener != null) {
                     int pos = getAbsoluteAdapterPosition();

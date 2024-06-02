@@ -37,6 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Fragmento para mostrar los detalles de una palabra.
+ * Implementa OnMapReadyCallback para manejar el mapa.
+ */
 public class DetallePalabraFragment extends Fragment implements OnMapReadyCallback {
     private View v;
     private Context c;
@@ -135,6 +139,11 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         txtFechaAnadida.setText(convertirFecha(palabra.getFechaAnadida()));
     }
 
+    /**
+     * Actualiza el icono de favoritos según el estado actual.
+     *
+     * @param esFavorita Indica si la palabra es favorita.
+     */
     private void actualizarIconoFavorito(boolean esFavorita) {
         if (esFavorita) {
             imgFavoritos.setImageResource(R.drawable.ic_favoritos_relleno);
@@ -143,11 +152,20 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
+    /**
+     * Actualiza el estado de favorito de una palabra.
+     *
+     * @param palabra   La palabra a actualizar.
+     * @param esFavorita Nuevo estado de favorito.
+     */
     private void actualizarFavorito(Palabra palabra, boolean esFavorita) {
         mainViewModel.actualizarFavorito(palabra, esFavorita);
         actualizarIconoFavorito(esFavorita);
     }
 
+    /**
+     * Inicializa el RecyclerView para mostrar las etiquetas (tags) de la palabra.
+     */
     private void inicializarRecyclerView() {
         if (palabra.getLTags() != null && !palabra.getLTags().isEmpty() && getActivity() != null) {
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
@@ -159,6 +177,11 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
+    /**
+     * Obtiene las coordenadas de una provincia.
+     *
+     * @param sProvincia La provincia de la palabra.
+     */
     private void obtenerCoordenadas(String sProvincia) {
         switch (sProvincia) {
             case "Granada":
@@ -200,6 +223,14 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
+    /**
+     * Obtiene la ubicación completa combinando provincia, población y comarca.
+     *
+     * @param sProvincia La provincia de la palabra.
+     * @param sPoblacion La población de la palabra.
+     * @param sComarca   La comarca de la palabra.
+     * @return La ubicación completa en formato de cadena.
+     */
     private String obtenerUbicacion(String sProvincia, String sPoblacion, String sComarca) {
         StringBuilder sUbicacion = new StringBuilder();
         if (sProvincia != null && !sProvincia.equals("Varias")) {

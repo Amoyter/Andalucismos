@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Andalucismos"
         tools:targetApi="34">
+        <receiver android:name=".utils.NotificationReceiver" android:exported="true" />
         <activity
             android:name=".ui.privacidad.PrivacidadActivity"
             android:exported="false" />
