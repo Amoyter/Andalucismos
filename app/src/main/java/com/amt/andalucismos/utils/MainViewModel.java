@@ -90,7 +90,7 @@ public class MainViewModel extends ViewModel {
                     }
                     if (user.getHistorial() == null) {
                         user.setHistorial(new ArrayList<>());
-                        userRef.child("historial").setValue(user.getFavoritas()); // Inicializar la lista de historial en la base de datos
+                        userRef.child("historial").setValue(user.getHistorial()); // Inicializar la lista de historial en la base de datos
                     }
                     usuario.setValue(user);
                 }
