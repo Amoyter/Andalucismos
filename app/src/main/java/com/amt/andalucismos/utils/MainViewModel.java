@@ -220,6 +220,28 @@ public class MainViewModel extends ViewModel {
         });
     }
 
+    public void eliminarHistorial() {
+        String userId = usuario.getValue().getId();
+        DatabaseReference usuarioRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId).child("historial");
+
+        usuarioRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                List<String> historial = new ArrayList<>();
+                mutableData.setValue(historial);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    Log.e("MainViewModel", "Error al actualizar historial: " + databaseError.getMessage());
+                }
+            }
+        });
+    }
+
     public void loadPalabraDelDia() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("contribuciones");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {

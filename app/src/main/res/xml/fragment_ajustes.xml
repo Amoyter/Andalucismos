@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreferenceCompat
+            android:key="ajustes_notificaciones"
+            android:title="Activar notificaciones"
+            android:summary="Activa o desactiva las notificaciones"
+            android:defaultValue="true" />
+
+    <Preference
+        android:key="ajustes_limpiar_historial"
+        android:title="Limpiar Historial de Palabras"
+        android:summary="Elimina todo el historial de palabras"/>
+
+</PreferenceScreen>

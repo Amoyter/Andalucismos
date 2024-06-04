@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -13,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.amt.andalucismos.MainActivity;
 import com.amt.andalucismos.R;
@@ -21,7 +23,15 @@ import com.amt.andalucismos.models.Palabra;
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("NotificacionReceiver", "onReceive: Intent recibido.");
+        // Verificar si las notificaciones están habilitadas
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean notificacionesHabilitadas = sharedPreferences.getBoolean("ajustes_notificaciones", true);
+
+        if (!notificacionesHabilitadas) {
+            Log.d("NotificacionReceiver", "Notificaciones deshabilitadas.");
+            return;
+        }
+
         MainViewModel mainViewModel = new ViewModelProvider(ViewModelStoreOwnerSingleton.getInstance()).get(MainViewModel.class);
 
         mainViewModel.getPalabraDelDia().observeForever(palabra -> {
