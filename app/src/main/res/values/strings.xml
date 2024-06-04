@@ -86,6 +86,18 @@
     <string name="eliminar_cuenta">Borrar cuenta</string>
     <string name="guardar_cambios">Guardar cambios</string>
 
+    <!-- Feedback (Fragment) -->
+    <string name="texto_superior_feedback">¿Quieres contarnos algo?</string>
+    <string name="tipo_comentario_texto">Tipo de comentario *</string>
+    <string-array name="tipo_comentario">
+        <item>Error</item>
+        <item>Reporte</item>
+        <item>Sugerencia de mejora</item>
+        <item>Otro</item>
+    </string-array>
+    <string name="escribe_aqui">Escribe aquí: *</string>
+    <string name="boton_enviar">Enviar</string>
+
     <!-- Claves google -->
     <string name="default_web_client_id">1039494721757-qca244irl0pber0o057a7je9s54bj2do.apps.googleusercontent.com</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -25,6 +26,7 @@ import java.util.Random;
 
 
 public class MainViewModel extends ViewModel {
+    private LifecycleOwner lifecycleOwner;
     private final MutableLiveData<List<Palabra>> palabras = new MutableLiveData<>();
     private final MutableLiveData<String> userId = new MutableLiveData<>();
     private final MutableLiveData<Usuario> usuario = new MutableLiveData<>();
@@ -43,6 +45,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<Palabra> getPalabraDelDia() { return palabraDelDia; }
+    public List<String> getHistorial() { return usuario.getValue().getHistorial(); }
 
     public LiveData<Palabra> getPalabraById(String palabraId) {
         MutableLiveData<Palabra> palabraLiveData = new MutableLiveData<>();
@@ -71,6 +74,8 @@ public class MainViewModel extends ViewModel {
     public void setPalabras(List<Palabra> listaPalabras) {
         palabras.setValue(listaPalabras);
     }
+
+    public void setHistorial(List<String> historial){usuario.getValue().setHistorial(historial);}
 
     private void loadUsuario(String id) {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios").child(id);
@@ -224,20 +229,20 @@ public class MainViewModel extends ViewModel {
         String userId = usuario.getValue().getId();
         DatabaseReference usuarioRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId).child("historial");
 
-        usuarioRef.runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                List<String> historial = new ArrayList<>();
-                mutableData.setValue(historial);
-                return Transaction.success(mutableData);
-            }
+        usuario.removeObservers(lifecycleOwner);
 
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
-                if (databaseError != null) {
-                    Log.e("MainViewModel", "Error al actualizar historial: " + databaseError.getMessage());
+        usuarioRef.setValue(null).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d("MainViewModel", "Historial eliminado correctamente.");
+
+                // Limpiar el historial en el LiveData
+                Usuario currentUser = usuario.getValue();
+                if (currentUser != null) {
+                    currentUser.setHistorial(new ArrayList<>());
+                    usuario.postValue(currentUser);
                 }
+            } else {
+                Log.e("MainViewModel", "Error al eliminar historial: " + task.getException().getMessage());
             }
         });
     }
@@ -265,6 +270,5 @@ public class MainViewModel extends ViewModel {
             }
         });
     }
-
 }
 

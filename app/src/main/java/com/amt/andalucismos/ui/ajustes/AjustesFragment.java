@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -66,7 +67,8 @@ public class AjustesFragment extends PreferenceFragmentCompat {
                             @Override
                             public void onPositivo() {
                                 mainViewModel.eliminarHistorial();
-                                Notificaciones.makeToast(getContext(), "Historial de búsqueda limpiado", Toast.LENGTH_SHORT);
+                                Log.d("AjustesFragment", mainViewModel.getHistorial().toString());
+                                Notificaciones.makeToast(getContext(), "Historial de búsqueda eliminado", Toast.LENGTH_SHORT);
                             }
 
                             @Override
