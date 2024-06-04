@@ -92,7 +92,7 @@
     <string-array name="tipo_comentario">
         <item>Error</item>
         <item>Reporte</item>
-        <item>Sugerencia de mejora</item>
+        <item>Sugerencia</item>
         <item>Otro</item>
     </string-array>
     <string name="escribe_aqui">Escribe aquí: *</string>

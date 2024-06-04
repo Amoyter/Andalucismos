@@ -47,7 +47,7 @@
 
         <!-- Tipo de comentario -->
         <Spinner
-            android:id="@+id/spnrProvincia"
+            android:id="@+id/spnrTipoComentario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
