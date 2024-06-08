@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Fragmento para mostrar los detalles de una palabra.
@@ -83,7 +92,7 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         inicializarVistas();
         mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
             if (usuario != null) {
-                setTextNegritaYSubrayado(txtUsuarioAporte, usuario.getNombre());
+                setTextNegritaYSubrayado(txtUsuarioAporte, obtenerNombreUsuarioAporte(palabra.getUsuarioId()));
                 esFavorita = usuario.getFavoritas().contains(palabra.getExpresionId());
                 actualizarIconoFavorito(esFavorita);
             }
@@ -150,6 +159,24 @@ public class DetallePalabraFragment extends Fragment implements OnMapReadyCallba
         } else {
             imgFavoritos.setImageResource(R.drawable.ic_favoritos_vacio);
         }
+    }
+
+    private String obtenerNombreUsuarioAporte(String idUsuario) {
+        String nombreUsuarioAporte = "idUsuario";
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("usuarios").child(idUsuario).child("nombre");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String uid = snapshot.getValue(String.class);
+                setTextNegritaYSubrayado(txtUsuarioAporte, uid);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return  nombreUsuarioAporte;
     }
 
     /**

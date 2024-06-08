@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.amt.andalucismos.models.Palabra;
 import com.amt.andalucismos.ui.detallePalabra.DetallePalabraFragment;
+import com.amt.andalucismos.ui.favoritos.FavoritosFragment;
+import com.amt.andalucismos.ui.historial.HistorialFragment;
 import com.amt.andalucismos.ui.home.HomeFragment;
 import com.amt.andalucismos.utils.MainViewModel;
 import com.amt.andalucismos.utils.Notificaciones;
@@ -260,8 +262,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void programarNotificacionDiaria() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 51);
+        calendar.set(Calendar.HOUR_OF_DAY, 11);
+        calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
         if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
@@ -318,6 +320,12 @@ public class MainActivity extends AppCompatActivity {
                         Fragment fragment = currentFragment.getChildFragmentManager().getPrimaryNavigationFragment();
                         if (fragment instanceof HomeFragment) {
                             ((HomeFragment) fragment).filtrarPalabras(newText);
+                        }
+                        else if (fragment instanceof FavoritosFragment) {
+                            ((FavoritosFragment) fragment).filtrarPalabras(newText);
+                        }
+                        else if (fragment instanceof HistorialFragment) {
+                            ((HistorialFragment) fragment).filtrarPalabras(newText);
                         }
                     }
                     return false;

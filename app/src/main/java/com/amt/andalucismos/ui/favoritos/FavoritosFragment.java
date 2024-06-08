@@ -90,6 +90,10 @@ public class FavoritosFragment extends Fragment implements OnPalabrasClickListen
         NavHostFragment.findNavController(this).navigate(R.id.action_nav_favoritos_to_nav_detalle_palabra, args);
     }
 
+    public void filtrarPalabras(String query) {
+        adapter.getFilter().filter(query);
+    }
+
     @Override
     public void ordenarAZ() {
         Collections.sort(alFavoritas, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));

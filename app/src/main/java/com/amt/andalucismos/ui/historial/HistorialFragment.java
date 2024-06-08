@@ -76,6 +76,10 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
         return v;
     }
 
+    public void filtrarPalabras(String query) {
+        adapter.getFilter().filter(query);
+    }
+
     private void inicializarVariables() {
         c = getContext();
         rvHistorial = v.findViewById(R.id.rvHistorial);
