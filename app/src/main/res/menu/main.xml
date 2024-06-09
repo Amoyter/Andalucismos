@@ -2,6 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_mas_recientes"
+        android:orderInCategory="100"
+        android:title="@string/action_mas_recientes"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_mas_antiguas"
+        android:orderInCategory="100"
+        android:title="@string/action_mas_antiguas"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_mas_vistas"
         android:orderInCategory="100"
         android:title="@string/action_mas_vistas"

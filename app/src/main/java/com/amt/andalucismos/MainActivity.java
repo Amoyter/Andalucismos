@@ -287,6 +287,10 @@ public class MainActivity extends AppCompatActivity {
             fragment.ordenarZA();
         } else if (itemId == R.id.action_mas_favoritas) {
             fragment.ordenarFavoritas();
+        } else if (itemId == R.id.action_mas_recientes) {
+            fragment.ordenarMasRecientes();
+        } else if (itemId == R.id.action_mas_antiguas) {
+            fragment.ordenarMasAntiguas();
         }
     }
 

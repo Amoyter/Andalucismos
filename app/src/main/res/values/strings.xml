@@ -9,6 +9,8 @@
     <string name="action_alfabetico_asc">Orden A-Z</string>
     <string name="action_alfabetico_desc">Orden Z-A</string>
     <string name="action_mas_vistas">Top vistas</string>
+    <string name="action_mas_recientes">Más recientes</string>
+    <string name="action_mas_antiguas">Más antiguas</string>
     <string name="action_mas_favoritos">Top favoritas</string>
 
     <!-- Menú -->

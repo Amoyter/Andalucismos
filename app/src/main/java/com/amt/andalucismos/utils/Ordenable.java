@@ -4,4 +4,6 @@ public interface Ordenable {
     void ordenarAZ();
     void ordenarZA();
     void ordenarFavoritas();
+    void ordenarMasRecientes();
+    void ordenarMasAntiguas();
 }

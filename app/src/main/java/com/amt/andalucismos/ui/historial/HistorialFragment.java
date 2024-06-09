@@ -154,4 +154,36 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
         adapter.setPalabras(listaFiltrada);
     }
 
+    @Override
+    public void ordenarMasRecientes() {
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> {
+            Long fecha1 = parseFechaSegura(p1.getFechaAnadida(), Long.MIN_VALUE); // Nulo -> MIN_VALUE
+            Long fecha2 = parseFechaSegura(p2.getFechaAnadida(), Long.MIN_VALUE); // Nulo -> MIN_VALUE
+            return fecha2.compareTo(fecha1);
+        });
+        adapter.setPalabras(listaFiltrada);
+    }
+
+    @Override
+    public void ordenarMasAntiguas() {
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> {
+            Long fecha1 = parseFechaSegura(p1.getFechaAnadida(), Long.MAX_VALUE); // Nulo -> MAX_VALUE
+            Long fecha2 = parseFechaSegura(p2.getFechaAnadida(), Long.MAX_VALUE); // Nulo -> MAX_VALUE
+            return fecha1.compareTo(fecha2);
+        });
+        adapter.setPalabras(listaFiltrada);
+    }
+
+    /**
+     * Parsea la fecha de String a Long y controla cuando es nula.
+     * @param fecha {@link String} Fecha a parsear
+     * @param valorPorDefecto {@link Long} Valor por defecto si la fecha es nula
+     * @return {@link Long} Fecha parseada
+     */
+    private Long parseFechaSegura(String fecha, Long valorPorDefecto) {
+        try { return Long.parseLong(fecha); }
+        catch (NumberFormatException e) { return valorPorDefecto; }
+    } // parseFechaSegura
 }
