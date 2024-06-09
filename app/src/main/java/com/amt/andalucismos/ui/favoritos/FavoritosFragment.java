@@ -43,7 +43,7 @@ public class FavoritosFragment extends Fragment implements OnPalabrasClickListen
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.loadPalabras(); // Asegurarse de cargar las palabras
+        //mainViewModel.loadPalabras(); // Asegurarse de cargar las palabras
     }
 
     @Override
@@ -52,7 +52,15 @@ public class FavoritosFragment extends Fragment implements OnPalabrasClickListen
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
+        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), this::actualizarListaFavoritas);
+
+        mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario != null) {
+                actualizarListaFavoritas(mainViewModel.getPalabras().getValue());
+            }
+        });
+
+        /*mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
             alFavoritas.clear();
             List<String> favoritasIds = mainViewModel.getUsuario().getValue().getFavoritas();
             for (Palabra palabra : palabras) {
@@ -61,9 +69,24 @@ public class FavoritosFragment extends Fragment implements OnPalabrasClickListen
                 }
             }
             adapter.notifyDataSetChanged();
-        });
+        });*/
 
         return v;
+    }
+
+    private void actualizarListaFavoritas(List<Palabra> palabras) {
+        if (palabras == null) return;
+
+        alFavoritas.clear();
+        List<String> favoritasIds = mainViewModel.getUsuario().getValue().getFavoritas();
+        if (favoritasIds != null) {
+            for (Palabra palabra : palabras) {
+                if (favoritasIds.contains(palabra.getExpresionId())) {
+                    alFavoritas.add(palabra);
+                }
+            }
+        }
+        adapter.setPalabras(alFavoritas);
     }
 
     private void inicializarVariables() {
@@ -96,20 +119,23 @@ public class FavoritosFragment extends Fragment implements OnPalabrasClickListen
 
     @Override
     public void ordenarAZ() {
-        Collections.sort(alFavoritas, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarZA() {
-        Collections.sort(alFavoritas, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarFavoritas() {
-        Collections.sort(alFavoritas, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
+        adapter.setPalabras(listaFiltrada);
     }
 
 }

@@ -44,7 +44,6 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.loadPalabras(); // Asegurarse de cargar las palabras
     }
 
     @Override
@@ -53,7 +52,15 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
+        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), this::actualizarListaHistorial);
+
+        mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario != null) {
+                actualizarListaHistorial(mainViewModel.getPalabras().getValue());
+            }
+        });
+
+        /*mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
             alHistorial.clear();
             Usuario usuario = mainViewModel.getUsuario().getValue();
             if (usuario != null) {
@@ -71,13 +78,35 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
                 }
             }
             adapter.notifyDataSetChanged();
-        });
+        });*/
 
         return v;
     }
 
     public void filtrarPalabras(String query) {
         adapter.getFilter().filter(query);
+    }
+
+    private void actualizarListaHistorial(List<Palabra> palabras) {
+        if (palabras == null) return;
+
+        alHistorial.clear();
+        Usuario usuario = mainViewModel.getUsuario().getValue();
+        if (usuario != null) {
+            List<String> historialIds = usuario.getHistorial();
+            if (historialIds != null) {
+                for (int i = historialIds.size() - 1; i >= 0; i--) {
+                    String id = historialIds.get(i);
+                    for (Palabra palabra : palabras) {
+                        if (palabra.getExpresionId().equals(id)) {
+                            alHistorial.add(palabra);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        adapter.setPalabras(alHistorial);
     }
 
     private void inicializarVariables() {
@@ -94,7 +123,7 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
 
     @Override
     public void onPalabraClick(int position) {
-        Palabra palabra = alHistorial.get(position);
+        Palabra palabra = adapter.getPalabraEnPosicion(position);
         DetallePalabraFragment detallePalabraFragment = new DetallePalabraFragment();
 
         Bundle args = new Bundle();
@@ -106,20 +135,23 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
 
     @Override
     public void ordenarAZ() {
-        Collections.sort(alHistorial, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarZA() {
-        Collections.sort(alHistorial, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarFavoritas() {
-        Collections.sort(alHistorial, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
+        adapter.setPalabras(listaFiltrada);
     }
 
 }

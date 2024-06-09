@@ -23,6 +23,7 @@ import com.amt.andalucismos.ui.detallePalabra.DetallePalabraFragment;
 import com.amt.andalucismos.ui.favoritos.FavoritosFragment;
 import com.amt.andalucismos.ui.historial.HistorialFragment;
 import com.amt.andalucismos.ui.home.HomeFragment;
+import com.amt.andalucismos.ui.propias.PropiasFragment;
 import com.amt.andalucismos.utils.MainViewModel;
 import com.amt.andalucismos.utils.Notificaciones;
 import com.amt.andalucismos.utils.NotificationReceiver;
@@ -313,19 +314,23 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onQueryTextSubmit(String query) { return false; }
 
                 @Override
-                public boolean onQueryTextChange(String newText) {
+                public boolean onQueryTextChange(String nuevoTexto) {
                     Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container_fragment);
 
                     if (currentFragment instanceof NavHostFragment) {
                         Fragment fragment = currentFragment.getChildFragmentManager().getPrimaryNavigationFragment();
                         if (fragment instanceof HomeFragment) {
-                            ((HomeFragment) fragment).filtrarPalabras(newText);
+                            Log.d("MainActivity", "Texto escrito: " + nuevoTexto);
+                            ((HomeFragment) fragment).filtrarPalabras(nuevoTexto);
                         }
                         else if (fragment instanceof FavoritosFragment) {
-                            ((FavoritosFragment) fragment).filtrarPalabras(newText);
+                            ((FavoritosFragment) fragment).filtrarPalabras(nuevoTexto);
                         }
                         else if (fragment instanceof HistorialFragment) {
-                            ((HistorialFragment) fragment).filtrarPalabras(newText);
+                            ((HistorialFragment) fragment).filtrarPalabras(nuevoTexto);
+                        }
+                        else if (fragment instanceof PropiasFragment) {
+                            ((PropiasFragment) fragment).filtrarPalabras(nuevoTexto);
                         }
                     }
                     return false;

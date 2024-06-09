@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +55,7 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
         inicializarVariables();
 
         mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
-            alPalabras.clear();
-            alPalabras.addAll(palabras);
-            adapter.notifyDataSetChanged();
+            adapter.setPalabras(palabras);
         });
 
         mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
@@ -81,12 +80,13 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
     }
 
     public void filtrarPalabras(String query) {
+        Log.d("HomeFragment", "Query a filtrar: " + query); // LLega el query bien
         adapter.getFilter().filter(query);
     }
 
     @Override
     public void onPalabraClick(int position) {
-        Palabra palabra = alPalabras.get(position);
+        Palabra palabra = adapter.getPalabraEnPosicion(position);
         DetallePalabraFragment detallePalabraFragment = new DetallePalabraFragment();
 
         Bundle args = new Bundle();
@@ -98,20 +98,23 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
 
     @Override
     public void ordenarAZ() {
-        Collections.sort(alPalabras, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarZA() {
-        Collections.sort(alPalabras, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarFavoritas() {
-        Collections.sort(alPalabras, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
+        adapter.setPalabras(listaFiltrada);
     }
 }
 

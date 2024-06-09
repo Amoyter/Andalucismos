@@ -30,7 +30,7 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
     private final OnPalabrasClickListener onPalabrasClickListener;
     private final int iResource = R.layout.item_palabra;
     private List<Palabra> alPalabras;
-    private List<Palabra> alPalabrasFull;
+    private List<Palabra> alPalabrasFiltro;
     private Context c;
     private MainViewModel mainViewModel;
 
@@ -46,7 +46,7 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
         this.onPalabrasClickListener = onPalabrasClickListener;
         this.c = c;
         this.alPalabras = alPalabras;
-        this.alPalabrasFull = new ArrayList<>(alPalabras);
+        this.alPalabrasFiltro = new ArrayList<>(alPalabras);
         this.mainViewModel = mainViewModel;
     }
 
@@ -59,7 +59,7 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Palabra palabra = alPalabras.get(position);
+        Palabra palabra = alPalabrasFiltro.get(position);
         holder.txtPalabra.setText(palabra.getPalabra());
         holder.txtSignificado.setText(palabra.getSignificado());
 
@@ -86,7 +86,15 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return alPalabras.size();
+        return alPalabrasFiltro.size();
+    }
+
+    public Palabra getPalabraEnPosicion(int position) {
+        return alPalabrasFiltro.get(position);
+    }
+
+    public List<Palabra> getAlPalabrasFiltro() {
+        return alPalabrasFiltro;
     }
 
     @Override
@@ -98,26 +106,26 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
     private Filter palabraFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Palabra> filteredList = new ArrayList<>();
+            List<Palabra> listaFiltrada = new ArrayList<>();
             if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(alPalabrasFull);
+                listaFiltrada.addAll(alPalabras);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-                for (Palabra palabra : alPalabrasFull) {
+                for (Palabra palabra : alPalabras) {
                     if (palabra.getPalabra().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(palabra);
+                        listaFiltrada.add(palabra);
                     }
                 }
             }
             FilterResults results = new FilterResults();
-            results.values = filteredList;
+            results.values = listaFiltrada;
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            alPalabras.clear();
-            alPalabras.addAll((List<Palabra>) results.values);
+            alPalabrasFiltro.clear();
+            alPalabrasFiltro.addAll((List<Palabra>) results.values);
             notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
         }
     };
@@ -129,7 +137,7 @@ public class PalabraAdapter extends RecyclerView.Adapter<PalabraAdapter.ViewHold
      */
     public void setPalabras(List<Palabra> palabras) {
         this.alPalabras = palabras;
-        this.alPalabrasFull = new ArrayList<>(palabras);
+        this.alPalabrasFiltro = new ArrayList<>(palabras);
         notifyDataSetChanged();
     }
 

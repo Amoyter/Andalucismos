@@ -43,7 +43,6 @@ public class PropiasFragment extends Fragment implements OnPalabrasClickListener
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.loadPalabras(); // Asegurarse de cargar las palabras
     }
 
     @Override
@@ -52,7 +51,15 @@ public class PropiasFragment extends Fragment implements OnPalabrasClickListener
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
+        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), this::actualizarListaPropias);
+
+        mainViewModel.getUserId().observe(getViewLifecycleOwner(), userId -> {
+            if (userId != null) {
+                actualizarListaPropias(mainViewModel.getPalabras().getValue());
+            }
+        });
+
+        /*mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
             alPropias.clear();
             String userId = mainViewModel.getUserId().getValue();
             for (Palabra palabra : palabras) {
@@ -61,7 +68,7 @@ public class PropiasFragment extends Fragment implements OnPalabrasClickListener
                 }
             }
             adapter.notifyDataSetChanged();
-        });
+        });*/
 
         return v;
     }
@@ -78,9 +85,24 @@ public class PropiasFragment extends Fragment implements OnPalabrasClickListener
         rvPropias.setAdapter(adapter);
     }
 
+    private void actualizarListaPropias(List<Palabra> palabras) {
+        if (palabras == null) return;
+
+        alPropias.clear();
+        String userId = mainViewModel.getUserId().getValue();
+        if (userId != null) {
+            for (Palabra palabra : palabras) {
+                if (palabra.getUsuarioId().equals(userId)) {
+                    alPropias.add(palabra);
+                }
+            }
+        }
+        adapter.setPalabras(alPropias);
+    }
+
     @Override
     public void onPalabraClick(int position) {
-        Palabra palabra = alPropias.get(position);
+        Palabra palabra = adapter.getPalabraEnPosicion(position);
         DetallePalabraFragment detallePalabraFragment = new DetallePalabraFragment();
 
         Bundle args = new Bundle();
@@ -90,22 +112,28 @@ public class PropiasFragment extends Fragment implements OnPalabrasClickListener
         NavHostFragment.findNavController(this).navigate(R.id.action_nav_propias_to_nav_detalle_palabra, args);
     }
 
+    public void filtrarPalabras(String query) {
+        adapter.getFilter().filter(query);
+    }
+
     @Override
     public void ordenarAZ() {
-        Collections.sort(alPropias, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p1.getPalabra().compareToIgnoreCase(p2.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarZA() {
-        Collections.sort(alPropias, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> p2.getPalabra().compareToIgnoreCase(p1.getPalabra()));
+        adapter.setPalabras(listaFiltrada);
     }
 
     @Override
     public void ordenarFavoritas() {
-        Collections.sort(alPropias, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
-        adapter.notifyDataSetChanged();
+        List<Palabra> listaFiltrada = new ArrayList<>(adapter.getAlPalabrasFiltro());
+        Collections.sort(listaFiltrada, (p1, p2) -> Integer.compare(p2.getNumFavoritas(), p1.getNumFavoritas()));
+        adapter.setPalabras(listaFiltrada);
     }
-
 }
