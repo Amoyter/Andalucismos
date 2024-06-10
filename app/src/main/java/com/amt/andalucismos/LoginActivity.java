@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.amt.andalucismos.admin.AdminActivity;
 import com.amt.andalucismos.utils.Notificaciones;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,9 +27,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -43,17 +46,21 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser fbUsuario; // Maneja el usuario
     private GoogleSignInClient fbSignInClient; // Maneja el inicio de sesión con Google
     private DatabaseReference database;
+    private ArrayList<String> alAdminsId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        alAdminsId = new ArrayList<>();
         // Inicializar vistas
         inicializarVistas();
         // Configurar Google Sign-In
         configurarGoogleSignIn();
         // Configurar listeners
         configurarListeners();
+        // Obtener adminsId
+        obtenerAdminsId();
 
         FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
             if (firebaseAuth.getCurrentUser() != null) {
@@ -125,8 +132,14 @@ public class LoginActivity extends AppCompatActivity {
         // Hacer que si el usuario no ha cerrado sesión, al entrar de nuevo no necesite identificarse
         fbUsuario = fbAuth.getCurrentUser();
         if(fbUsuario != null){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
+            String UsuarioId = fbUsuario.getUid();
+            if(alAdminsId.contains(UsuarioId)){
+                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                finish();
+            } else {
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }
         }
     } // onStart()
 
@@ -188,9 +201,16 @@ public class LoginActivity extends AppCompatActivity {
     private void iniciarSesion(String email, String password) {
         fbAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-                Notificaciones.makeToast(getApplicationContext(), "Inicio de sesión correcto", Toast.LENGTH_SHORT);
+                String usuarioId = fbAuth.getCurrentUser().getUid();
+                if(alAdminsId.contains(usuarioId)){
+                    startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                    finish();
+                    Notificaciones.makeToast(getApplicationContext(), "Inicio de sesión correcto", Toast.LENGTH_SHORT);
+                } else{
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                    Notificaciones.makeToast(getApplicationContext(), "Inicio de sesión correcto", Toast.LENGTH_SHORT);
+                }
             }
         }).addOnFailureListener(e -> {
             if (Objects.requireNonNull(e.getMessage()).startsWith("A network")) {
@@ -208,5 +228,15 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = fbSignInClient.getSignInIntent();
         startActivityForResult(intent, REQ_ONE_TAP);
     } // iniciarSesionGoogle()
+
+    private void obtenerAdminsId() {
+        database.child("admins").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                    alAdminsId.add(snapshot.getKey());
+                }
+            }
+        });
+    }
 
 } // LoginActivity

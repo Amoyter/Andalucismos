@@ -18,7 +18,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Andalucismos"
         tools:targetApi="34">
-        <receiver android:name=".utils.NotificationReceiver" android:exported="true" />
+        <activity
+            android:name=".admin.FeedbackAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.PalabrasAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".utils.NotificationReceiver"
+            android:exported="true" />
+
         <activity
             android:name=".ui.privacidad.PrivacidadActivity"
             android:exported="false" />
