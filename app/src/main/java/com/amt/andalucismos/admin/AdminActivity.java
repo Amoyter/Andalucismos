@@ -43,9 +43,7 @@ public class AdminActivity extends AppCompatActivity {
             Intent intent = new Intent(this, FeedbackAdminActivity.class);
             startActivity(intent);
         });
-        btnAdminCerrarSesion.setOnClickListener(v -> {
-            cerrarSesion();
-        });
+        btnAdminCerrarSesion.setOnClickListener(v -> cerrarSesion());
     } // inicializarListeners
 
     private void cerrarSesion() {
@@ -64,5 +62,5 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onNeutral() {}
         });
-    }
+    } // cerrarSesion
 } // AdminActivity

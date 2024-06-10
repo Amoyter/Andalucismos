@@ -3,12 +3,10 @@ package com.amt.andalucismos.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Comentario implements Parcelable {
     private String comentario;
@@ -91,7 +89,7 @@ public class Comentario implements Parcelable {
         this.tipoComentario = tipoComentario;
     }
 
-    public boolean isRevisado() {
+    public boolean getRevisado() {
         return revisado;
     }
 
@@ -106,4 +104,5 @@ public class Comentario implements Parcelable {
     public void setUsuarioId(String usuarioId) {
         this.usuarioId = usuarioId;
     }
+
 }

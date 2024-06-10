@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.amt.andalucismos.MainActivity;
+import com.amt.andalucismos.models.Comentario;
 import com.amt.andalucismos.models.Palabra;
 import com.amt.andalucismos.models.Usuario;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +30,7 @@ import java.util.Random;
 public class MainViewModel extends ViewModel {
     private LifecycleOwner lifecycleOwner;
     private final MutableLiveData<List<Palabra>> palabras = new MutableLiveData<>();
+    private final MutableLiveData<List<Comentario>> comentarios = new MutableLiveData<>();
     private final MutableLiveData<String> userId = new MutableLiveData<>();
     private final MutableLiveData<Usuario> usuario = new MutableLiveData<>();
     private final MutableLiveData<Palabra> palabraDelDia = new MutableLiveData<>();
@@ -35,6 +38,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<Palabra>> getPalabras() {
         return palabras;
     }
+
+    public LiveData<List<Comentario>> getComentarios() { return comentarios; }
 
     public LiveData<String> getUserId() {
         return userId;
@@ -74,6 +79,8 @@ public class MainViewModel extends ViewModel {
     public void setPalabras(List<Palabra> listaPalabras) {
         palabras.setValue(listaPalabras);
     }
+
+    public void setComentarios(List<Comentario> listaComentarios) { comentarios.setValue(listaComentarios); }
 
     public void setHistorial(List<String> historial){usuario.getValue().setHistorial(historial);}
 
@@ -119,6 +126,56 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("Firebase", "Error al obtener los datos", databaseError.toException());
+            }
+        });
+    }
+
+    public void loadComentarios() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("comentarios");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Comentario> comentarios = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Comentario comentario = snapshot.getValue(Comentario.class);
+                    if (!comentario.getRevisado()) {
+                        comentarios.add(comentario);
+                    }
+                }
+                Log.d("MainViewModel", "Comentarios: " + comentarios.size());
+                setComentarios(comentarios);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Firebase", "Error al obtener los datos", databaseError.toException());
+            }
+        });
+    }
+
+    public void actualizarComentario(Comentario comentario, boolean revisado) {
+        DatabaseReference comentarioRef = FirebaseDatabase.getInstance().getReference("comentarios").child(comentario.getComentarioId());
+
+        comentarioRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Comentario c = mutableData.getValue(Comentario.class);
+
+                if (c == null) { return Transaction.success(mutableData); }
+                if (!revisado) { c.setRevisado(true); }
+
+                mutableData.setValue(c);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError == null && committed) {
+                    Log.d("MainViewModel", "Comentario actualizado correctamente.");
+                } else {
+                    Log.e("MainViewModel", "Error al actualizar palabra: " + databaseError.getMessage());
+                }
             }
         });
     }
