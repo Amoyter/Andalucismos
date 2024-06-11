@@ -29,25 +29,24 @@ import java.util.Random;
 
 public class MainViewModel extends ViewModel {
     private LifecycleOwner lifecycleOwner;
-    private final MutableLiveData<List<Palabra>> palabras = new MutableLiveData<>();
+    private final MutableLiveData<List<Palabra>> palabrasRevisadas = new MutableLiveData<>();
+    private final MutableLiveData<List<Palabra>> palabrasNoRevisadas = new MutableLiveData<>();
     private final MutableLiveData<List<Comentario>> comentarios = new MutableLiveData<>();
     private final MutableLiveData<String> userId = new MutableLiveData<>();
     private final MutableLiveData<Usuario> usuario = new MutableLiveData<>();
     private final MutableLiveData<Palabra> palabraDelDia = new MutableLiveData<>();
 
-    public LiveData<List<Palabra>> getPalabras() {
-        return palabras;
+    public LiveData<List<Palabra>> getPalabrasRevisadas() {
+        return palabrasRevisadas;
     }
+
+    public LiveData<List<Palabra>> getPalabrasNoRevisadas() { return palabrasNoRevisadas; }
 
     public LiveData<List<Comentario>> getComentarios() { return comentarios; }
 
-    public LiveData<String> getUserId() {
-        return userId;
-    }
+    public LiveData<String> getUserId() { return userId; }
 
-    public LiveData<Usuario> getUsuario() {
-        return usuario;
-    }
+    public LiveData<Usuario> getUsuario() { return usuario; }
 
     public LiveData<Palabra> getPalabraDelDia() { return palabraDelDia; }
     public List<String> getHistorial() { return usuario.getValue().getHistorial(); }
@@ -76,9 +75,9 @@ public class MainViewModel extends ViewModel {
     }
 
 
-    public void setPalabras(List<Palabra> listaPalabras) {
-        palabras.setValue(listaPalabras);
-    }
+    public void setPalabrasRevisadas(List<Palabra> listaPalabras) { palabrasRevisadas.setValue(listaPalabras); }
+
+    public void setPalabrasNoRevisadas(List<Palabra> listaPalabras) { palabrasNoRevisadas.setValue(listaPalabras); }
 
     public void setComentarios(List<Comentario> listaComentarios) { comentarios.setValue(listaComentarios); }
 
@@ -110,7 +109,7 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void loadPalabras() {
+    public void loadPalabrasRevisadas() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("contribuciones");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -118,14 +117,89 @@ public class MainViewModel extends ViewModel {
                 List<Palabra> palabras = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Palabra palabra = snapshot.getValue(Palabra.class);
-                    palabras.add(palabra);
+                    if (palabra.getRevisado()) {
+                        palabras.add(palabra);
+                    }
                 }
-                setPalabras(palabras);
+                setPalabrasRevisadas(palabras);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("Firebase", "Error al obtener los datos", databaseError.toException());
+            }
+        });
+    }
+
+    public void loadPalabrasNoRevisadas () {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("contribuciones");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Palabra> palabras = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Palabra palabra = snapshot.getValue(Palabra.class);
+                    if(!palabra.getRevisado()) {
+                        palabras.add(palabra);
+                    }
+                }
+                setPalabrasNoRevisadas(palabras);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Firebase", "Error al obtener los datos", databaseError.toException());
+            }
+        });
+    }
+
+    public void actualizarPalabrasNoRevisadas(Palabra palabra, boolean revisado) {
+        DatabaseReference palabraRef = FirebaseDatabase.getInstance().getReference("contribuciones").child(palabra.getExpresionId());
+
+        palabraRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Palabra p = mutableData.getValue(Palabra.class);
+
+                if (p == null) { return Transaction.success(mutableData); }
+                if (!revisado) { p.setRevisado(true); }
+
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError == null && committed) {
+                    Log.d("MainViewModel", "Palabra actualizada correctamente.");
+                } else {
+                    Log.e("MainViewModel", "Error al actualizar palabra: " + databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void eliminarPalabras(Palabra palabra) {
+        DatabaseReference palabraRef = FirebaseDatabase.getInstance().getReference("contribuciones").child(palabra.getExpresionId());
+        palabraRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Palabra p = mutableData.getValue(Palabra.class);
+
+                if (p == null) { return Transaction.success(mutableData); }
+                mutableData.setValue(null);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError == null && committed) {
+                    Log.d("MainViewModel", "Palabra eliminada correctamente.");
+                } else {
+                    Log.e("MainViewModel", "Error al eliminar la palabra: " + databaseError.getMessage());
+                }
             }
         });
     }
@@ -174,7 +248,7 @@ public class MainViewModel extends ViewModel {
                 if (databaseError == null && committed) {
                     Log.d("MainViewModel", "Comentario actualizado correctamente.");
                 } else {
-                    Log.e("MainViewModel", "Error al actualizar palabra: " + databaseError.getMessage());
+                    Log.e("MainViewModel", "Error al actualizar comentario: " + databaseError.getMessage());
                 }
             }
         });
@@ -235,7 +309,7 @@ public class MainViewModel extends ViewModel {
                             } else {
                                 // Actualiza el LiveData del usuario y de las palabras para que las vistas se sincronicen
                                 usuario.postValue(usuario.getValue());
-                                loadPalabras();
+                                loadPalabrasRevisadas();
                             }
                         }
                     });
@@ -312,7 +386,9 @@ public class MainViewModel extends ViewModel {
                 List<Palabra> palabras = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Palabra palabra = snapshot.getValue(Palabra.class);
-                    palabras.add(palabra);
+                    if (palabra.getRevisado()) {
+                        palabras.add(palabra);
+                    }
                 }
                 if (!palabras.isEmpty()) {
                     int randomIndex = new Random().nextInt(palabras.size());

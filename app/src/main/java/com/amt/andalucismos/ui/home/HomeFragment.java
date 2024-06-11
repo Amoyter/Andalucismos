@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.loadPalabras(); // Asegurarse de cargar las palabras
+        mainViewModel.loadPalabrasRevisadas(); // Asegurarse de cargar las palabras
     }
 
     @Override
@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment implements OnPalabrasClickListener, O
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), palabras -> {
+        mainViewModel.getPalabrasRevisadas().observe(getViewLifecycleOwner(), palabras -> {
             adapter.setPalabras(palabras);
         });
 

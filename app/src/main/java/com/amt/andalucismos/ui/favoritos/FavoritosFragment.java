@@ -52,11 +52,11 @@ public class FavoritosFragment extends Fragment implements OnPalabrasClickListen
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), this::actualizarListaFavoritas);
+        mainViewModel.getPalabrasRevisadas().observe(getViewLifecycleOwner(), this::actualizarListaFavoritas);
 
         mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
             if (usuario != null) {
-                actualizarListaFavoritas(mainViewModel.getPalabras().getValue());
+                actualizarListaFavoritas(mainViewModel.getPalabrasRevisadas().getValue());
             }
         });
 

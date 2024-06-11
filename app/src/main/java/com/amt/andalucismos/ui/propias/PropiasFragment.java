@@ -51,11 +51,11 @@ public class PropiasFragment extends Fragment implements OnPalabrasClickListener
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), this::actualizarListaPropias);
+        mainViewModel.getPalabrasRevisadas().observe(getViewLifecycleOwner(), this::actualizarListaPropias);
 
         mainViewModel.getUserId().observe(getViewLifecycleOwner(), userId -> {
             if (userId != null) {
-                actualizarListaPropias(mainViewModel.getPalabras().getValue());
+                actualizarListaPropias(mainViewModel.getPalabrasRevisadas().getValue());
             }
         });
 

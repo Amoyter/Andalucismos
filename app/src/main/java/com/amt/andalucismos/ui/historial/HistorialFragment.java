@@ -52,11 +52,11 @@ public class HistorialFragment extends Fragment implements OnPalabrasClickListen
 
         inicializarVariables();
 
-        mainViewModel.getPalabras().observe(getViewLifecycleOwner(), this::actualizarListaHistorial);
+        mainViewModel.getPalabrasRevisadas().observe(getViewLifecycleOwner(), this::actualizarListaHistorial);
 
         mainViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
             if (usuario != null) {
-                actualizarListaHistorial(mainViewModel.getPalabras().getValue());
+                actualizarListaHistorial(mainViewModel.getPalabrasRevisadas().getValue());
             }
         });
 

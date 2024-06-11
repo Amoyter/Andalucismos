@@ -184,7 +184,7 @@ public class Palabra implements Parcelable {
         this.provincia = provincia;
     }
 
-    public boolean isRevisado() {
+    public boolean getRevisado() {
         return revisado;
     }
 
