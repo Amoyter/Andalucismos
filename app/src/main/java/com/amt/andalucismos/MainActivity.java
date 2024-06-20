@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_POST_NOTIFICATIONS = 1;
     private static final String CHANNEL_ID = "palabraDelDiaChannel";
+    private static boolean ES_NOTIFICACION_DIARIA = false;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private FirebaseAuth fbAuth;
@@ -137,20 +138,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void abrirDetallePalabra(String palabraId) {
         // Navegar al DetallePalabraFragment con la palabraId
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container_fragment);
         MainViewModel mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.getPalabraById(palabraId).observe(this, palabra -> {
             if (palabra != null) {
                 Bundle args = new Bundle();
                 args.putParcelable("palabra", palabra);
 
+                Fragment fragment = currentFragment.getChildFragmentManager().getPrimaryNavigationFragment();
                 DetallePalabraFragment detallePalabraFragment = new DetallePalabraFragment();
                 detallePalabraFragment.setArguments(args);
 
-                // Reemplazar el fragmento actual con DetallePalabraFragment y limpiar el back stack
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container_fragment, detallePalabraFragment)
-                        .commit();
+                detallePalabraFragment.setArguments(args);
+                NavHostFragment.findNavController(fragment).navigate(R.id.action_nav_home_to_nav_detalle_palabra, args);
             }
         });
     }
@@ -263,10 +263,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void programarNotificacionDiaria() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 11);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 45);
+        calendar.set(Calendar.SECOND, 00);
         if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
